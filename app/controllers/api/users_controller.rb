@@ -1,7 +1,7 @@
 module Api
   class UsersController < MainController
 
-    # before_action :authorize_request, except: [:forgot_password]
+    before_action :authorize_request, except: [:forgot_password]
 
     def show
       render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}), status:200}, status:200
@@ -10,6 +10,7 @@ module Api
     def forgot_password
       @user = User.find_by(email: params[:email])
       if @user
+        Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id)
         render json: { message: "An Email to reset password is sent to your email.", status: 200}, status: 200
       else
         render json: { message: "No Account Infomation found with this account.", error: "Account not found", status: 404}, status: 200

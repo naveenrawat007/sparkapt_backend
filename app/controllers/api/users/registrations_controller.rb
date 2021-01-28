@@ -6,6 +6,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     if !@old_user
       @user = User.new(configure_sign_up_params)
       if @user.save
+        Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id)
         token = JsonWebToken.encode(user_id: @user.id)
         @user.update_column('auth_token', token)
         render json: {message: "User Created Successfully.", user: UserSerializer.new(@user, root: false), status: 201}, status: 200
