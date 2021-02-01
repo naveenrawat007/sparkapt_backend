@@ -6,9 +6,10 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     if !@old_user
       @user = User.new(configure_sign_up_params)
       if @user.save
-        Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id)
+        Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id) if Rails.env.production?
         token = JsonWebToken.encode(user_id: @user.id)
-        @user.update_column('auth_token', token)
+        @user.update_attributes(auth_token: token, is_trial: true, trial_start: Time.now.utc, trial_end: Time.now.utc + 3.days)
+
         render json: {message: "User Created Successfully.", user: UserSerializer.new(@user, root: false), status: 201}, status: 200
       else
         render json: { message: "Can not add user.", error: "User save error", status: 400}, status: 200

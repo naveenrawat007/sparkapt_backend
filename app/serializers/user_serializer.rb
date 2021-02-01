@@ -9,6 +9,9 @@ class UserSerializer < ActiveModel::Serializer
     data[:email] = object.email ? object.email : ""
     data[:phone_no] = object.phone_no ? object.phone_no : ""
     data[:is_admin] = object.is_admin
+    data[:is_trial] = object.is_trial
+    data[:trial_start] = object.trial_start
+    data[:trial_end] = object.trial_end
     data
   end
 
