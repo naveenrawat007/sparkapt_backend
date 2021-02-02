@@ -8,20 +8,22 @@ module Api
     end
 
     def forgot_password
-      @user = User.find_by(email: params[:email])
+      @user = User.find_by(email: params[:user][:email])
       if @user
-        Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id)
-        render json: { message: "An Email to reset password is sent to your email.", status: 200}, status: 200
+        token = JsonWebToken.encode(user_id: @user.id)
+        @user.update_column('auth_token', token)
+        domain = Rails.application.secrets.website_domain
+        Sidekiq::Client.enqueue_to_in("default", Time.now, ForgetPasswordWorker, @user.id, domain)
+        render json: { message: "A Link to reset password is sent to your email.", status: 200}, status: 200
       else
         render json: { message: "No Account Infomation found with this account.", error: "Account not found", status: 404}, status: 200
       end
     end
 
-    def update_password
-      user = User.find_by(email: params[:user][:email]) if params[:user][:email].present?
-      if user.present?
-        user.update(password: params[:user][:password])
-        render json: { message: "Password Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
+    def reset_password
+      if @current_user.present?
+        @current_user.update(password: params[:user][:new_password])
+        render json: { message: "Password Update Sucessfully", status: 200,  user: UserSerializer.new(@current_user,root: false)}
       else
         render json: { message: "User not found", status: 400}
       end
