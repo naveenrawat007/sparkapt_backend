@@ -1,10 +1,16 @@
 module Api
   class UsersController < MainController
 
-    before_action :authorize_request, except: [:forgot_password]
+    before_action :authorize_request, except: [:forgot_password, :contact_us]
 
     def show
       render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}), status:200}, status:200
+    end
+
+    def contact_us
+      if params[:email].present?
+
+      end
     end
 
     def forgot_password
@@ -13,8 +19,8 @@ module Api
         token = JsonWebToken.encode(user_id: @user.id)
         @user.update_column('auth_token', token)
         domain = Rails.application.secrets.website_domain
-        # UserWelcomeMailer.forget_password(@user.id, domain).deliver_now
-        Sidekiq::Client.enqueue_to_in("default", Time.now, ForgetPasswordWorker, @user.id, domain)
+        UserWelcomeMailer.forget_password(@user.id, domain).deliver_now
+        # Sidekiq::Client.enqueue_to_in("default", Time.now, ForgetPasswordWorker, @user.id, domain)
         render json: { message: "A Link to reset password is sent to your email.", status: 200}, status: 200
       else
         render json: { message: "No Account Infomation found with this account.", error: "Account not found", status: 404}, status: 200
