@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     post 'users/reset_password', to: 'users#reset_password'
     get 'users/show', to: 'users#show'
     put "users/update_profile" => "users#update_profile"
+    post "users/contact_us" => "users#contact_us"
 
   end
 

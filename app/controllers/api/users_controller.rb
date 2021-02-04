@@ -8,8 +8,10 @@ module Api
     end
 
     def contact_us
-      if params[:email].present?
-
+      if params[:query][:email].present?
+        render json: { message: "We got your query and we are working on it. Thanks", status: 200}, status: 200
+      else
+        render json: { message: "Something Went Wrong. Please try again!", status: 400}, status: 200
       end
     end
 
@@ -19,7 +21,11 @@ module Api
         token = JsonWebToken.encode(user_id: @user.id)
         @user.update_column('auth_token', token)
         domain = Rails.application.secrets.website_domain
-        UserWelcomeMailer.forget_password(@user.id, domain).deliver_now
+        begin
+          UserWelcomeMailer.forget_password(@user.id, domain).deliver_now
+        rescue Exception => e
+          render json: {message: "Error Occurred while sending mail !!", status: 401} and return
+        end
         # Sidekiq::Client.enqueue_to_in("default", Time.now, ForgetPasswordWorker, @user.id, domain)
         render json: { message: "A Link to reset password is sent to your email.", status: 200}, status: 200
       else
