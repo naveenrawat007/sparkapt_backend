@@ -6,7 +6,8 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     if !@old_user
       @user = User.new(configure_sign_up_params)
       if @user.save
-        Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id) if Rails.env.production?
+        UserWelcomeMailer.welcome(@user.id).deliver_now if Rails.env.production?
+        # Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id) if Rails.env.production?
         token = JsonWebToken.encode(user_id: @user.id)
         @user.update_attributes(auth_token: token, is_trial: true, trial_start: Time.now.utc, trial_end: Time.now.utc + 3.days)
 

@@ -13,7 +13,8 @@ module Api
         token = JsonWebToken.encode(user_id: @user.id)
         @user.update_column('auth_token', token)
         domain = Rails.application.secrets.website_domain
-        Sidekiq::Client.enqueue_to_in("default", Time.now, ForgetPasswordWorker, @user.id, domain)
+        UserWelcomeMailer.forget_password(@user.id, domain).deliver_now if Rails.env.production?
+        # Sidekiq::Client.enqueue_to_in("default", Time.now, ForgetPasswordWorker, @user.id, domain)
         render json: { message: "A Link to reset password is sent to your email.", status: 200}, status: 200
       else
         render json: { message: "No Account Infomation found with this account.", error: "Account not found", status: 404}, status: 200
