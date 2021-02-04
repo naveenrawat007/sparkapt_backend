@@ -2,7 +2,7 @@ require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rbenv'
-require 'mina_sidekiq/tasks'
+# require 'mina_sidekiq/tasks'
 
 set :application_name, 'smartapt'
 set :domain, '192.53.163.52'
@@ -22,8 +22,8 @@ task :remote_environment do
 end
 
 task :setup do
-  command %(mkdir -p "#{fetch(:deploy_to)}/shared/pids/")
-  command %(mkdir -p "#{fetch(:deploy_to)}/shared/log/")
+  # command %(mkdir -p "#{fetch(:deploy_to)}/shared/pids/")
+  # command %(mkdir -p "#{fetch(:deploy_to)}/shared/log/")
   command %[touch "#{fetch(:shared_path)}/config/database.yml"]
   command %[touch "#{fetch(:shared_path)}/config/unicorn.rb"]
   command %[touch "#{fetch(:shared_path)}/config/secrets.yml"]
@@ -39,7 +39,7 @@ desc "Deploys the current version to the server."
 task :deploy do
   deploy do
     invoke :'git:clone'
-    invoke :'sidekiq:quiet'
+    # invoke :'sidekiq:quiet'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     #invoke :'rails:db_create'
@@ -48,7 +48,7 @@ task :deploy do
     invoke :'deploy:cleanup'
     invoke :'restart'
     on :launch do
-      invoke :'sidekiq:restart'
+      # invoke :'sidekiq:restart'
       in_path(fetch(:current_path)) do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}

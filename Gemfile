@@ -48,4 +48,4 @@ gem 'rack-cors'
 gem 'awesome_print'
 gem 'redis'
 gem "sidekiq"
-gem 'mina-sidekiq'
+# gem 'mina-sidekiq'
