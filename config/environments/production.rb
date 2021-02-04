@@ -58,6 +58,19 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :smtp
+# change to true to allow email to be sent during development
+   config.action_mailer.perform_deliveries = true
+   config.action_mailer.default :charset => "utf-8"
+   config.action_mailer.smtp_settings = {
+   address: "smtp.gmail.com",
+   port: 587,
+   domain: "example.com",
+   authentication: "plain",
+   enable_starttls_auto: true,
+   user_name: "rawatnaveennr123@gmail.com" ,
+   password: "naveen@28"
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
