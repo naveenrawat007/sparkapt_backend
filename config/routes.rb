@@ -5,6 +5,10 @@ Rails.application.routes.draw do
     resources :clients
     namespace 'admin' do
       resources :plans
+      resources :subscriptions
+
+      get "inquiry_list" => "plans#contact_inquiry_list"
+
     end
     resources :subscriptions
     post 'users/forgot_password', to: 'users#forgot_password'
@@ -12,6 +16,7 @@ Rails.application.routes.draw do
     get 'users/show', to: 'users#show'
     put "users/update_profile" => "users#update_profile"
     post "users/contact_us" => "users#contact_us"
+
   end
 
 end

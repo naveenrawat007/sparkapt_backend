@@ -1,0 +1,2 @@
+class Contactinquiry < ApplicationRecord
+end

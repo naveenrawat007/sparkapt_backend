@@ -11,6 +11,14 @@ module Api
         end
       end
 
+      def contact_inquiry_list
+        if @current_user
+          render json: { message: "Contact Inquiry List.", status: 200, inquiry_list: ActiveModelSerializers::SerializableResource.new(Contactinquiry.all.order(created_at: :asc), each_serializer: ContactinquirySerializer)} and return
+        else
+          render json: { message: "Admin not found", status: 400}
+        end
+      end
+
     end
 
   end

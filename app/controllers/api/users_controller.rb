@@ -9,9 +9,10 @@ module Api
 
     def contact_us
       if params[:query][:email].present?
+        Contactinquiry.create(contact_us_params)
         render json: { message: "We got your query and we are working on it. Thanks", status: 200}, status: 200
       else
-        render json: { message: "Something Went Wrong. Please try again!", status: 400}, status: 200
+        render json: { message: "Please fill all details!", status: 400}, status: 200
       end
     end
 
@@ -68,6 +69,10 @@ module Api
     private
     def user_update_params
       params.require(:user).permit(:first_name, :last_name, :name, :email, :phone_no, :password)
+    end
+
+    def contact_us_params
+      params.require(:query).permit(:email, :phone, :inquiry_reason, :message)
     end
 
   end
