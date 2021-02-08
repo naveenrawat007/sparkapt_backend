@@ -48,4 +48,5 @@ gem 'rack-cors'
 gem 'awesome_print'
 gem 'redis'
 gem "sidekiq"
+gem 'whenever'
 # gem 'mina-sidekiq'

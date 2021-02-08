@@ -3,14 +3,14 @@ Rails.application.routes.draw do
   namespace 'api' do
     devise_for :users, controllers:{ sessions: 'api/users/sessions', registrations: 'api/users/registrations' }
     resources :clients
+    resources :subscriptions
 
     # admin_routes
-      get "admin/inquiry_list" => "admins#contact_inquiry_list"
-      get "admin/subscriptions" => "admins#subscription_list"
-      get "admin/plans" => "admins#plans_list"
+    get "admin/inquiry_list" => "admins#contact_inquiry_list"
+    get "admin/subscriptions" => "admins#subscription_list"
+    get "admin/plans" => "admins#plans_list"
 
-
-    # resources :subscriptions
+    # user_routes
     post 'users/forgot_password', to: 'users#forgot_password'
     post 'users/reset_password', to: 'users#reset_password'
     get 'users/show', to: 'users#show'
