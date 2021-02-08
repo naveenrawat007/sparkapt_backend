@@ -71,8 +71,7 @@ module Api
       end
     end
 
-    private
-
+  
     private
     def client_params
       params.require(:client).permit(:first_name, :last_name, :email, :phone, :notes, :budget, :move_in_date)
