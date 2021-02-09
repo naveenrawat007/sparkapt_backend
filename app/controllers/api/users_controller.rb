@@ -9,7 +9,12 @@ module Api
 
     def contact_us
       if params[:query][:email].present?
-        Contactinquiry.create(contact_us_params)
+        inquiry = Contactinquiry.create(contact_us_params)
+        begin
+          UserWelcomeMailer.contact_inquiry(inquiry.id).deliver_now
+        rescue ExceptionName
+          render json: {message: "Error Occurred while sending mail !!", status: 401} and return
+        end
         render json: { message: "We got your query and we are working on it. Thanks", status: 200}, status: 200
       else
         render json: { message: "Please fill all details!", status: 400}, status: 200
