@@ -12,7 +12,7 @@ module Api
         inquiry = Contactinquiry.create(contact_us_params)
         begin
           UserWelcomeMailer.contact_inquiry(inquiry.id).deliver_now
-        rescue ExceptionName
+        rescue Exception => e
           render json: {message: "Error Occurred while sending mail !!", status: 401} and return
         end
         render json: { message: "We got your query and we are working on it. Thanks", status: 200}, status: 200

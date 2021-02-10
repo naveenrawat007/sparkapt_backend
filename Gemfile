@@ -47,6 +47,7 @@ gem 'active_model_serializers'
 gem 'rack-cors'
 gem 'awesome_print'
 gem 'redis'
-gem "sidekiq"
+# gem "sidekiq"
 gem 'whenever'
+gem 'stripe'
 # gem 'mina-sidekiq'

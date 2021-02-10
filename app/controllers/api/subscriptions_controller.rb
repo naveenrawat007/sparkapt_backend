@@ -10,5 +10,10 @@ module Api
       end
     end
 
+    def create
+      result = SubscriptionService.new(params, @current_user).call
+      render json: {message: result.message, status: result.status}
+    end
+
   end
 end
