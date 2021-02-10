@@ -1,6 +1,6 @@
 module Api
   class AdminsController < MainController
-    before_action :authorize_admin_request
+    before_action :authorize_admin_request, except: :plans_list
 
     def subscription_list
       if @current_user
@@ -11,11 +11,7 @@ module Api
     end
 
     def plans_list
-      if @current_user
-        render json: { message: "SmartApt Plans.", status: 200, plans: ActiveModelSerializers::SerializableResource.new(Plan.all.order(created_at: :asc), each_serializer: PlanSerializer)} and return
-      else
-        render json: { message: "Admin not found", status: 400}
-      end
+      render json: { message: "SmartApt Plans.", status: 200, plans: ActiveModelSerializers::SerializableResource.new(Plan.all.order(created_at: :asc), each_serializer: PlanSerializer)} and return  
     end
 
     def contact_inquiry_list
