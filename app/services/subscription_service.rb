@@ -3,13 +3,13 @@ class SubscriptionService
 
   def initialize(params, user)
     @card_token = params[:token] if params[:token].present?
-    @plan = Plan.find_by(stripe_plan_id: 'price_0IGeHlmF3xTfYRgdLDhoUenj')
+    @plan = Plan.find_by(stripe_plan_id: params[:plan_id]) if params[:plan_id].present?
     @user = user
   end
 
   def call
     begin
-      smartapt_plan = Stripe::Plan.retrieve('price_0IGeHlmF3xTfYRgdLDhoUenj')
+      smartapt_plan = Stripe::Plan.retrieve(@plan&.stripe_plan_id)
     rescue Exception => e
     end
     if smartapt_plan
@@ -26,7 +26,7 @@ class SubscriptionService
 
   def find_customer
     if user.stripe_customer_id
-      retrieve_customer(user.stripe_customer_id)
+      retrieve_customer(user&.stripe_customer_id)
     else
       create_customer
     end
@@ -38,7 +38,7 @@ class SubscriptionService
 
   def create_customer
     customer = Stripe::Customer.create(
-      email: user.email,
+      email: user&.email,
       source: card_token
     )
     user.update(stripe_customer_id: customer.id)
@@ -49,10 +49,11 @@ class SubscriptionService
     result = Stripe::Subscription.create({
       customer: customer,
       items: [
-        {price: 'price_0IGeHlmF3xTfYRgdLDhoUenj'},
+        {price: plan&.stripe_plan_id},
       ],
     })
     if result.status == "active"
+      user.update(is_trial: false, trial_end: nil)
       subscription = user.subscriptions.new(plan_id: plan.id, status: 'active', active: true, current_start_datetime: Time.at(result.current_period_start), current_end_datetime: Time.at(result.current_period_end), stripe_subscription_id: result.id)
       if subscription.save
         OpenStruct.new(status: 200, message: "Thanks for subscribing us.")
