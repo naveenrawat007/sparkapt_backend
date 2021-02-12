@@ -11,7 +11,6 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
         rescue Exception => e
           render json: {message: "Error Occurred while sending mail !!", status: 401} and return
         end
-        # Sidekiq::Client.enqueue_to_in("default", Time.now, RegistrationMailWorker, @user.id) if Rails.env.production?
         token = JsonWebToken.encode(user_id: @user.id)
         @user.update_attributes(auth_token: token, is_trial: true, trial_start: Time.now.utc, trial_end: Time.now.utc + 3.days)
         render json: {message: "User Created Successfully.", user: UserSerializer.new(@user, root: false), status: 201}, status: 200

@@ -32,7 +32,6 @@ module Api
         rescue Exception => e
           render json: {message: "Error Occurred while sending mail !!", status: 401} and return
         end
-        # Sidekiq::Client.enqueue_to_in("default", Time.now, ForgetPasswordWorker, @user.id, domain)
         render json: { message: "A Link to reset password is sent to your email.", status: 200}, status: 200
       else
         render json: { message: "No Account Infomation found with this account.", error: "Account not found", status: 404}, status: 200
