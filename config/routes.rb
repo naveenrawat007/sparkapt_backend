@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get 'users/show', to: 'users#show'
     put "users/update_profile" => "users#update_profile"
     post "users/contact_us" => "users#contact_us"
+    post 'search_client' => "clients#search_client"
 
   end
 

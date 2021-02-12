@@ -11,8 +11,20 @@ module Api
     end
 
     def create
-      result = SubscriptionService.new(params, @current_user).call
-      render json: {message: result.message, status: result.status}
+      if @current_user
+        result = SubscriptionService.new(params, @current_user).call
+        render json: {message: result.message, status: result.status}
+      else
+        render json: { message: "User not found", status: 400}
+      end
+    end
+
+    def cancel_subscription
+      if @current_user
+        result = SubscriptionService.new(params, @current_user).delete_subscription
+      else
+        render json: { message: "User not found", status: 400}
+      end
     end
 
   end

@@ -53,15 +53,25 @@ module Api
         user = User.find_by(email: params[:user][:email])
         if user.present?
           if user.id == @current_user.id
-            user.update(user_update_params)
-            render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
+            if user.update(user_update_params)
+              user.update(password: params[:user][:new_password]) if params[:user][:new_password] != ''
+              name = user.first_name + " " + user.last_name
+              user.update_column('name', name)
+              render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
+            else
+              render json: { message: "User not Update Sucessfully", status: 400} and return
+            end
           else
             render json: {message: "Email already exist.", status: 406} and return
           end
         else
           if @current_user.present?
-            @current_user.update(user_update_params)
-            render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
+            if @current_user.update(user_update_params)
+              @current_user.update(password: params[:user][:new_password]) if params[:user][:new_password] != ''
+              render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
+            else
+              render json: { message: "User not Update Sucessfully", status: 400} and return
+            end
           else
             render json: {message: "User Not Found.", status: 406} and return
           end
@@ -73,7 +83,7 @@ module Api
 
     private
     def user_update_params
-      params.require(:user).permit(:first_name, :last_name, :name, :email, :phone_no, :password)
+      params.require(:user).permit(:first_name, :last_name, :name, :email, :phone_no)
     end
 
     def contact_us_params

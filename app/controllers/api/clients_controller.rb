@@ -11,6 +11,15 @@ module Api
       end
     end
 
+    def search_client
+      if @current_user
+        clients = @current_user.clients.where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR lower(phone) LIKE :search OR lower(budget) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :asc)
+        render json: { message: "Clients List.", status: 200, clients: ActiveModelSerializers::SerializableResource.new(clients, each_serializer: ClientSerializer)} and return
+      else
+        render json: { message: "User not found", status: 400}
+      end
+    end
+
     def create
       if @current_user
         client = @current_user.clients.new(client_params)
@@ -71,7 +80,7 @@ module Api
       end
     end
 
-  
+
     private
     def client_params
       params.require(:client).permit(:first_name, :last_name, :email, :phone, :notes, :budget, :move_in_date)

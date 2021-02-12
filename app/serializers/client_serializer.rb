@@ -7,7 +7,8 @@ class ClientSerializer < ActiveModel::Serializer
     data[:email] = object.email ? object.email : ""
     data[:phone] = object.phone ? object.phone : ""
     data[:budget] = object.budget
-    data[:move_in_date] = object.move_in_date
+    data[:mve_in_date] = object.move_in_date ? object.move_in_date.strftime('%m/%d/%Y') : ''
+    data[:move_in_date] = object.move_in_date ? object.move_in_date.strftime('%Y-%m-%d') : ''
     data[:notes] = object.notes
     data
   end

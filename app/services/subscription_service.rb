@@ -4,6 +4,7 @@ class SubscriptionService
   def initialize(params, user)
     @card_token = params[:token] if params[:token].present?
     @plan = Plan.find_by(stripe_plan_id: params[:plan_id]) if params[:plan_id].present?
+    @subscription_id = params[:subscription_id] if params[:subscription_id].present?
     @user = user
   end
 
@@ -16,6 +17,25 @@ class SubscriptionService
       create_subscription(find_customer)
     else
       OpenStruct.new(message: 'Invalid Plan', status: 400)
+    end
+  end
+
+  def delete_subscription
+    subscription = @user.subscriptions.where(stripe_subscription_id: @subscription_id)
+    if subscription
+      begin
+        result = Stripe::Subscription.delete(subscription&.stripe_subscription_id)
+        if result.status == 'canceled'
+          subscription.update(active: false, status: 'canceled')
+          OpenStruct.new(message: 'Subscription successfully canceled.', status: 200) and return
+        else
+          OpenStruct.new(message: 'Subscription cancel failed.', status: 400) and return
+        end
+      rescue ExceptionName
+        OpenStruct.new(message: 'Subscription cancel failed.', status: 400) and return
+      end
+    else
+      OpenStruct.new(message: 'No Subscription found', status: 400)
     end
   end
 

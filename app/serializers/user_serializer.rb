@@ -12,6 +12,7 @@ class UserSerializer < ActiveModel::Serializer
     data[:is_trial] = object.is_trial
     data[:trial_start] = object.trial_start
     data[:trial_end] = object.trial_end
+    data[:new_password] = ''
     data[:subscription] = object.subscriptions.last ? object.subscriptions.last : ""
     data
   end
