@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post "admin/subscriptions" => "admins#subscription_list"
     get "admin/plans" => "admins#plans_list"
     get "admin/users" => "admins#users_list"
+    post "admin/search_user" => "admins#search_user"
 
     # user_routes
     post 'users/forgot_password', to: 'users#forgot_password'

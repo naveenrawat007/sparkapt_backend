@@ -18,6 +18,15 @@ module Api
       end
     end
 
+    def search_user
+      if @current_user
+        users = User.all.where.not(is_admin: true).where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR lower(phone_no) LIKE :search OR lower(name) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :asc)
+        render json: { message: "Users List.", status: 200, users: ActiveModelSerializers::SerializableResource.new(users, each_serializer: UserSerializer)} and return
+      else
+        render json: { message: "User not found", status: 400}
+      end
+    end
+
     def plans_list
       render json: { message: "SmartApt Plans.", status: 200, plans: ActiveModelSerializers::SerializableResource.new(Plan.all.order(created_at: :asc), each_serializer: PlanSerializer)} and return
     end
