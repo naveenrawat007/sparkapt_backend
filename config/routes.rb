@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     post "admin/search_user" => "admins#search_user"
 
     # user_routes
+    get 'cities' => "users#get_cities"
     post 'users/forgot_password', to: 'users#forgot_password'
     post 'users/reset_password', to: 'users#reset_password'
     get 'users/show', to: 'users#show'

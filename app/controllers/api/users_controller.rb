@@ -1,10 +1,15 @@
 module Api
   class UsersController < MainController
 
-    before_action :authorize_request, except: [:forgot_password, :contact_us]
+    before_action :authorize_request, except: [:forgot_password, :contact_us, :get_cities]
 
     def show
       render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}), status:200}, status:200
+    end
+
+    def get_cities
+      default_city = City.find_by(name: 'Austin')
+      render json: { message: "Cities List.", status: 200, default: {label: default_city.name, value: default_city.id} ,cities: ActiveModelSerializers::SerializableResource.new(City.all, each_serializer: CitySerializer )} and return
     end
 
     def contact_us
