@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get 'cities' => "users#get_cities"
     post 'users/forgot_password', to: 'users#forgot_password'
     post 'users/reset_password', to: 'users#reset_password'
+    post 'users/update_password', to: 'users#update_password'
     get 'users/show', to: 'users#show'
     put "users/update_profile" => "users#update_profile"
     post "users/contact_us" => "users#contact_us"

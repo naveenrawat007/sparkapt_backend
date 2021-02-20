@@ -52,13 +52,25 @@ module Api
       end
     end
 
+    def update_password
+      if @current_user.present?
+        if @current_user.valid_password?(params[:user][:old_password])
+          @current_user.update(password: params[:user][:new_password])
+          render json: { message: "Password Update Sucessfully", status: 200}
+        else
+          render json: { message: "Invalid Password", status: 400} and return
+        end
+      else
+        render json: { message: "User not found", status: 400}
+      end
+    end
+
     def update_profile
       if params[:user][:email].blank? == false
         user = User.find_by(email: params[:user][:email])
         if user.present?
           if user.id == @current_user.id
             if user.update(user_update_params)
-              user.update(password: params[:user][:new_password]) if params[:user][:new_password] != ''
               name = user.first_name + " " + user.last_name
               user.update_column('name', name)
               render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
@@ -71,7 +83,6 @@ module Api
         else
           if @current_user.present?
             if @current_user.update(user_update_params)
-              @current_user.update(password: params[:user][:new_password]) if params[:user][:new_password] != ''
               render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
             else
               render json: { message: "User not Update Sucessfully", status: 400} and return
