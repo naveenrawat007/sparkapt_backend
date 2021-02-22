@@ -4,6 +4,10 @@ Rails.application.routes.draw do
     devise_for :users, controllers:{ sessions: 'api/users/sessions', registrations: 'api/users/registrations' }
     resources :clients
     resources :subscriptions
+    namespace 'admin' do
+      resources :notifications
+    end
+
 
     # admin_routes
     get "admin/inquiry_list" => "admins#contact_inquiry_list"
