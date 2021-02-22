@@ -4,7 +4,12 @@ module Api
 
     def index
       if @current_user and params[:city_id].present?
-        clients = @current_user.clients.where(city_id: params[:city_id].to_i).order(created_at: :asc)
+        city = City.find(params[:city_id].to_i)&.name
+        if city == 'All'
+          clients = Client.all.order(created_at: :asc)
+        else
+          clients = @current_user.clients.where(city_id: params[:city_id].to_i).order(created_at: :asc)
+        end
         render json: { message: "Clients List.", status: 200, clients: ActiveModelSerializers::SerializableResource.new(clients, each_serializer: ClientSerializer)} and return
       else
         render json: { message: "User not found", status: 400}
@@ -13,7 +18,12 @@ module Api
 
     def search_client
       if @current_user
-        clients = @current_user.clients.where(city_id: params[:city_id].to_i).where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR lower(phone) LIKE :search OR lower(budget) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :asc)
+        city = City.find(params[:city_id].to_i)&.name
+        if city == 'All'
+          clients = @current_user.clients.where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR lower(phone) LIKE :search OR lower(budget) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :asc)
+        else
+          clients = @current_user.clients.where(city_id: params[:city_id].to_i).where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR lower(phone) LIKE :search OR lower(budget) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :asc)
+        end
         render json: { message: "Clients List.", status: 200, clients: ActiveModelSerializers::SerializableResource.new(clients, each_serializer: ClientSerializer)} and return
       else
         render json: { message: "User not found", status: 400}
@@ -40,7 +50,12 @@ module Api
         client = @current_user.clients.find_by(id: params[:id])
         if client
           client.destroy
-          clients = @current_user.clients.where(city_id: params[:city_id].to_i).order(created_at: :asc)
+          city = City.find(params[:city_id].to_i)&.name
+          if city == 'All'
+            clients = @current_user.clients.order(created_at: :asc)
+          else
+            clients = @current_user.clients.where(city_id: params[:city_id].to_i).order(created_at: :asc)
+          end
           render json: { message: "Client delete sucessfully.", status: 200, clients: ActiveModelSerializers::SerializableResource.new(clients, each_serializer: ClientSerializer)} and return
         else
           render json: { message: "Client not found", status: 400} and return
