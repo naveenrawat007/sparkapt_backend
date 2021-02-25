@@ -6,7 +6,7 @@ module Api
       if @current_user and params[:city_id].present?
         city = City.find(params[:city_id].to_i)&.name
         if city == 'All'
-          clients = Client.all.order(created_at: :asc)
+          clients = @current_user.clients.order(created_at: :asc)
         else
           clients = @current_user.clients.where(city_id: params[:city_id].to_i).order(created_at: :asc)
         end

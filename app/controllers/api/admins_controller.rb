@@ -10,6 +10,16 @@ module Api
       end
     end
 
+    def admin_name
+      render json: { status: 200, admin_name: @current_user&.name}
+    end
+
+    def login_as_user
+      user = User.find(params[:user_id].to_i)
+      token = JsonWebToken.encode(user_id: params[:user_id].to_i)
+      render json: { message: "Login Successfully", status: 200, user_token: token, user_name: user&.name}
+    end
+
     def users_list
       if @current_user
         render json: { message: "User List.", status: 200, users: ActiveModelSerializers::SerializableResource.new(User.all.where(is_admin: false).order(created_at: :asc), each_serializer: UserSerializer)} and return

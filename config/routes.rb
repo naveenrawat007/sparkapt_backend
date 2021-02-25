@@ -6,6 +6,9 @@ Rails.application.routes.draw do
     resources :subscriptions
     namespace 'admin' do
       resources :notifications
+      resources :properties
+      get "/property_types" => "properties#get_property_types"
+      get "/latest_notification" => "notifications#get_latest_notification"
     end
 
 
@@ -15,6 +18,8 @@ Rails.application.routes.draw do
     get "admin/plans" => "admins#plans_list"
     get "admin/users" => "admins#users_list"
     post "admin/search_user" => "admins#search_user"
+    post "admin/login_as" => "admins#login_as_user"
+    get "admin/get_admin_name" => "admins#admin_name"
 
     # user_routes
     get 'cities' => "users#get_cities"

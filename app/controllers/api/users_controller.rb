@@ -83,7 +83,9 @@ module Api
         else
           if @current_user.present?
             if @current_user.update(user_update_params)
-              render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
+              name = @current_user.first_name + " " + @current_user.last_name
+              @current_user.update_column('name', name)
+              render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(@current_user,root: false)}
             else
               render json: { message: "User not Update Sucessfully", status: 400} and return
             end
