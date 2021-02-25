@@ -1,7 +1,8 @@
 module Api
   module Admin
     class PropertiesController < Api::MainController
-      before_action :authorize_admin_request, except: [:get_property_types]
+      before_action :authorize_admin_request, except: [:get_property_types, :index]
+      before_action :authorize_request, only: [:get_property_types, :index]
 
       def get_property_types
         render json: { message: "Property Types.", status: 200, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
