@@ -6,6 +6,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:email] = object.email ? object.email : ""
     data[:specials] = object.specials ? object.specials : ""
     data[:price] = object.price ? object.price : ""
+    data[:phone] = object.phone ? object.phone : ""
     data[:submarket] = object.submarket ? object.submarket : ""
     data[:zip] = object.zip ? object.zip : ""
     data[:built_year] = object.built_year ? object.built_year : ""
