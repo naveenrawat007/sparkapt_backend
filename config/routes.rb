@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       resources :properties
       get "/property_types" => "properties#get_property_types"
       get "/latest_notification" => "notifications#get_latest_notification"
+      post "/filter_property" => "properties#filter_property"
+
     end
 
 

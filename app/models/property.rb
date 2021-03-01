@@ -3,4 +3,6 @@ class Property < ApplicationRecord
   has_many :type_details
   has_many :types, through: :property_types
   belongs_to :city
+
+  scope :price_filter, ->(min,max) { where('price > ? AND price < ?', min, max) }
 end

@@ -8,6 +8,20 @@ module Api
         render json: { message: "Property Types.", status: 200, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
       end
 
+      def filter_property
+        if params[:city_id].present?
+          city = City.find(params[:city_id].to_i)&.name
+          if city == 'All'
+            properties = Property.all.price_filter(0, params[:max_price]).order(created_at: :asc)
+          else
+            properties = Property.where(city_id: params[:city_id].to_i).price_filter(0, params[:max_price]).order(created_at: :asc)
+          end
+          render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
+        else
+          render json: { message: "City not found", status: 400}
+        end
+      end
+
       def index
         if params[:city_id].present?
           city = City.find(params[:city_id].to_i)&.name
