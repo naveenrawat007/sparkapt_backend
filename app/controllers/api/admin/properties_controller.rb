@@ -1,8 +1,8 @@
 module Api
   module Admin
     class PropertiesController < Api::MainController
-      before_action :authorize_admin_request, except: [:get_property_types, :index]
-      before_action :authorize_request, only: [:get_property_types, :index]
+      before_action :authorize_admin_request, except: [:get_property_types, :index, :show]
+      before_action :authorize_request, only: [:get_property_types, :index, :show]
 
       def get_property_types
         render json: { message: "Property Types.", status: 200, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
@@ -19,6 +19,19 @@ module Api
           render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
         else
           render json: { message: "City not found", status: 400}
+        end
+      end
+
+      def show
+        if params[:id].present?
+          property = Property.find_by(id: params[:id])
+          if property
+            render json: { message: "Property detail", status: 200, property: PropertySerializer.new(property,root: false)}
+          else
+            render json: { message: "Property not found.", status: 400}
+          end
+        else
+          render json: { message: "Property Id is missing", status: 400}
         end
       end
 
@@ -42,10 +55,37 @@ module Api
         end
       end
 
+      def update
+        property = Property.find(params[:id].to_i)
+        if property
+          property.assign_attributes(property_params)
+          property.city_id = params[:city_id].to_i if params[:city_id].present?
+          if property.save
+            if params[:property][:property_type_details]
+              params[:property][:property_type_details].each do |type_detail|
+                data = TypeDetail.find(type_detail['id'].to_i)
+                if data
+                  data.update(notes: type_detail['notes'], price: type_detail['price'], move_in: type_detail['move_in_date'])
+                else
+                  render json: { message: "PropertyType not Found.", status: 400} and return
+                end
+              end
+            else
+              render json: { message: "PropertyType Details params not exist.", status: 400} and return
+            end
+            render json: { message: "Property Update Sucessfully.", status: 200}
+          else
+            render json: { message: "Property not Updated.", status: 400}
+          end
+        else
+          render json: { message: "Property not Found.", status: 400}
+        end
+      end
+
       private
 
       def property_params
-        params.require(:property).permit(:name, :email, :phone, :specials, :price, :submarket, :zip, :built_year, :escort, :management_company, :web_link, :manger_name, :google_rating)
+        params.require(:property).permit(:name, :email, :phone, :specials, :price, :submarket, :zip, :built_year, :escort, :management_company, :web_link, :manger_name, :google_rating, :lat, :long)
       end
 
     end
