@@ -7,4 +7,6 @@ class User < ApplicationRecord
   has_many :subscriptions
   has_many :clients
 
+  scope :is_admin, -> {where(is_admin: true)}
+
 end

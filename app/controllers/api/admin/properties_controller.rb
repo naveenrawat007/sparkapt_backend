@@ -1,24 +1,29 @@
 module Api
   module Admin
     class PropertiesController < Api::MainController
-      before_action :authorize_admin_request, except: [:get_property_types, :index, :show]
-      before_action :authorize_request, only: [:get_property_types, :index, :show]
+      before_action :authorize_admin_request, except: [:get_property_types, :show, :get_properties, :filter_property]
+      before_action :authorize_request, only: [:get_property_types, :show, :get_properties, :filter_property]
 
       def get_property_types
         render json: { message: "Property Types.", status: 200, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
       end
 
       def filter_property
-        if params[:city_id].present?
-          city = City.find(params[:city_id].to_i)&.name
-          if city == 'All'
-            properties = Property.all.price_filter(0, params[:max_price]).order(created_at: :asc)
+        is_valid = validate_property
+        if is_valid
+          if params[:city_id].present?
+            city = City.find(params[:city_id].to_i)&.name
+            if city == 'All'
+              properties = Property.all.price_filter(0, params[:max_price]).order(created_at: :asc)
+            else
+              properties = Property.where(city_id: params[:city_id].to_i).price_filter(0, params[:max_price]).order(created_at: :asc)
+            end
+            render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
           else
-            properties = Property.where(city_id: params[:city_id].to_i).price_filter(0, params[:max_price]).order(created_at: :asc)
+            render json: { message: "City not found", status: 400}
           end
-          render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
         else
-          render json: { message: "City not found", status: 400}
+          render json: { message: "Your Trial period is over. Please Subscribe us to get properties", status: 400}
         end
       end
 
@@ -33,6 +38,25 @@ module Api
           render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
         else
           render json: { message: "City not found", status: 400}
+        end
+      end
+
+      def get_properties
+        is_valid = validate_property
+        if is_valid
+          if params[:city_id].present?
+            city = City.find_by(id: params[:city_id].to_i)&.name
+            if city == 'All'
+              properties = Property.all.price_filter(0, params[:max_price]).order(created_at: :asc)
+            else
+              properties = Property.where(city_id: params[:city_id].to_i).price_filter(0, params[:max_price]).order(created_at: :asc)
+            end
+            render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
+          else
+            render json: { message: "City not found", status: 402}
+          end
+        else
+          render json: { message: "Your Trial period is over. Please Subscribe us to get properties", status: 400}
         end
       end
 
@@ -97,6 +121,18 @@ module Api
       end
 
       private
+
+      def validate_property
+        if @current_user.is_admin == false
+          if @current_user.is_trial == true || (@current_user.subscriptions.present? && @current_user.try(:subscriptions)&.last&.status == "active")
+            return true
+          else
+            return false
+          end
+        else
+          return true
+        end
+      end
 
       def property_params
         params.require(:property).permit(:name, :email, :phone, :specials, :price, :submarket, :zip, :built_year, :escort, :management_company, :web_link, :manger_name, :google_rating, :lat, :long)
