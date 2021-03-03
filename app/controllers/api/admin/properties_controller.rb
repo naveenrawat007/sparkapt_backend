@@ -22,7 +22,7 @@ module Api
         is_valid = validate_property
         if is_valid
           if params[:city_id].present?
-            city = City.find(params[:city_id].to_i)&.name
+            city = City.find_by(id: params[:city_id].to_i)&.name
             if city == 'All'
               properties = Property.all.price_filter(0, params[:max_price]).order(created_at: :asc)
             else
@@ -30,7 +30,7 @@ module Api
             end
             render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
           else
-            render json: { message: "City not found", status: 400}
+            render json: { message: "City not found", status: 402}
           end
         else
           render json: { message: "Your Trial period is over. Please Subscribe us to get properties", status: 400}
