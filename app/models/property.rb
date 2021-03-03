@@ -6,4 +6,6 @@ class Property < ApplicationRecord
 
   scope :price_filter, ->(min,max) { where('price >= ? AND price <= ?', min, max) }
   scope :built_year_filter, ->(from_year,to_year) { where('built_year >= ? AND built_year <= ?', from_year, to_year) }
+  scope :escort_filter, -> (escort_percent) {where("escort > ?", escort_percent)}
+
 end
