@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       get "/latest_notification" => "notifications#get_latest_notification"
       post "/filter_property" => "properties#filter_property"
       post "/get_properties" => "properties#get_properties"
+      post "/import_properties" => "properties#import_properties"
 
     end
 

@@ -11,23 +11,33 @@ module Api
       def filter_property
         is_valid = validate_property
         if is_valid
-          result = FilterPropertyService.new(params).call
-          render json: {message: result.message, properties: result.properties, status: result.status}
+          if params[:city_id].present?
+            properties = get_city_properties(params[:city_id])
+            result = FilterPropertyService.new(params, properties).call
+            render json: {message: result.message, properties: result.properties, status: result.status}
+          else
+            render json: { message: "City not found", status: 400} and return
+          end
         else
           render json: { message: "Your Trial period is over. Please Subscribe us to get properties", status: 400}
         end
+      end
+
+      def import_properties
+        # if params[:properties].present? && params[:properties].kind_of?(Array) && params[:properties].count > 2
+        #   result = ImportPropertyService.new(params).call
+        #   render json: {message: result.message, properties: result.properties, status: result.status}
+        # else
+        #   render json: { message: "Invalid Data.", status: 400}
+        # end
       end
 
       def get_properties
         is_valid = validate_property
         if is_valid
           if params[:city_id].present?
-            city = City.find_by(id: params[:city_id].to_i)&.name
-            if city == 'All'
-              properties = Property.all.price_filter(0, params[:max_price]).order(created_at: :asc)
-            else
-              properties = Property.where(city_id: params[:city_id].to_i).price_filter(0, params[:max_price]).order(created_at: :asc)
-            end
+            properties = get_city_properties(params[:city_id])
+            properties = properties.price_filter(0, params[:max_price]).order(created_at: :asc)
             render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
           else
             render json: { message: "City not found", status: 402}
@@ -97,7 +107,31 @@ module Api
         end
       end
 
+      def destroy
+        property = Property.find_by(id: params[:id].to_i)
+        if property
+          if property.destroy
+            properties = get_city_properties(params[:city_id])
+            properties = properties.price_filter(0, params[:max_price]).order(created_at: :asc)
+            render json: { message: "Property Deleted.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
+          else
+            render json: {message: "Property not found.", status: 400} and return
+          end
+        else
+          render json: {message: "Property not found.", status: 400}
+        end
+      end
+
       private
+
+      def get_city_properties(id)
+        city = City.find_by(id: id)&.name
+        if city == 'All'
+          properties = Property.all
+        else
+          properties = Property.where(city_id: id)
+        end
+      end
 
       def validate_property
         if @current_user.is_admin == false
