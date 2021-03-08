@@ -38,7 +38,7 @@ module Api
           if params[:city_id].present?
             properties = get_city_properties(params[:city_id])
             properties = properties.price_filter(0, params[:max_price]).order(created_at: :asc)
-            render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
+            render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties.uniq, each_serializer: PropertySerializer)} and return
           else
             render json: { message: "City not found", status: 402}
           end

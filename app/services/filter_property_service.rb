@@ -16,7 +16,7 @@ class FilterPropertyService
       properties = @properties.price_filter(0, @params[:max_price]).search_filter(@params[:search]).order(created_at: :asc)
     end
 
-    OpenStruct.new(message: 'Properties.', status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer))
+    OpenStruct.new(message: 'Properties.', status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties.uniq, each_serializer: PropertySerializer))
 
   end
 
