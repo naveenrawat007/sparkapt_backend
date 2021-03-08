@@ -9,7 +9,7 @@ module Api
 
     def get_cities
       default_city = City.find_by(name: 'Austin')
-      render json: { message: "Cities List.", status: 200, default: {label: default_city.name, value: default_city.id} ,cities: ActiveModelSerializers::SerializableResource.new(City.all, each_serializer: CitySerializer )} and return
+      render json: { message: "Cities List.", status: 200, default: {label: default_city.name, value: default_city.id} ,cities: ActiveModelSerializers::SerializableResource.new(City.all.order(name: :asc), each_serializer: CitySerializer )} and return
     end
 
     def contact_us
