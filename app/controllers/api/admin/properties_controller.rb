@@ -67,7 +67,7 @@ module Api
           property_type = Type.all
           property_type.each do |type|
 
-            property_type_detail = type.type_details.create(move_in: params[type&.type_code], notes: params[:property][type&.type_code][:notes], price: params[:property][type&.type_code][:price])
+            property_type_detail = type.type_details.create(available: params[:property][type&.type_code][:available], notes: params[:property][type&.type_code][:notes], price: params[:property][type&.type_code][:price])
 
             property_type_detail.update(property_id: property&.id)
 
@@ -90,7 +90,7 @@ module Api
               params[:property][:property_type_details].each do |type_detail|
                 data = TypeDetail.find(type_detail['id'].to_i)
                 if data
-                  data.update(notes: type_detail['notes'], price: type_detail['price'], move_in: type_detail['move_in_date'])
+                  data.update(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'])
                 else
                   render json: { message: "PropertyType not Found.", status: 400} and return
                 end
