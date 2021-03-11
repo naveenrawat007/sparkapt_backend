@@ -11,6 +11,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:zip] = object.zip ? object.zip : ""
     data[:lat] = object.lat ? object.lat : ""
     data[:long] = object.long ? object.long : ""
+    data[:address] = object.address ? object.address : ""
     data[:web_link] = object.web_link ? object.web_link : ""
     data[:manager_name] = object.manager_name ? object.manager_name : ""
     data[:google_map] = object.google_map ? object.google_map : ""
