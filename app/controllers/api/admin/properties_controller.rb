@@ -24,12 +24,16 @@ module Api
       end
 
       def import_properties
-        # if params[:properties].present? && params[:properties].kind_of?(Array) && params[:properties].count > 2
-        #   result = ImportPropertyService.new(params).call
-        #   render json: {message: result.message, properties: result.properties, status: result.status}
-        # else
-        #   render json: { message: "Invalid Data.", status: 400}
-        # end
+        if params[:properties].present? && params[:properties].kind_of?(Array) && params[:properties].count > 2
+          begin
+            result = ImportPropertyService.new(params).call
+            render json: {message: result.message, status: result.status} and return
+          rescue Exception => e
+            render json: {message: "Invalid Data or some missing fields.Please check and try again", status: 400} and return
+          end
+        else
+          render json: { message: "Invalid Data.", status: 400}
+        end
       end
 
       def get_properties
@@ -111,9 +115,7 @@ module Api
         property = Property.find_by(id: params[:id].to_i)
         if property
           if property.destroy
-            properties = get_city_properties(params[:city_id])
-            properties = properties.price_filter(0, params[:max_price]).order(created_at: :asc)
-            render json: { message: "Property Deleted.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
+            render json: { message: "Property Deleted.", status: 200} and return
           else
             render json: {message: "Property not found.", status: 400} and return
           end

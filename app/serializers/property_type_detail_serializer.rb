@@ -7,6 +7,8 @@ class PropertyTypeDetailSerializer < ActiveModel::Serializer
     data[:available] = object.available ? object.available : ""
     data[:price] = object.price ? object.price : ""
     data[:notes] = object.notes ? object.notes : ""
+    data[:size] = object.size ? object.size : ""
+    data[:floor_plan] = object.floor_plan ? object.floor_plan : ""
     data[:property_type] = object.type ? object.try(:type)&.name : ""
     data
   end
