@@ -1,11 +1,25 @@
 module Api
   module Admin
     class PropertiesController < Api::MainController
-      before_action :authorize_admin_request, except: [:get_property_types, :show, :get_properties, :filter_property]
-      before_action :authorize_request, only: [:get_property_types, :show, :get_properties, :filter_property]
+      before_action :authorize_admin_request, except: [:get_property_types, :show, :get_properties, :filter_property, :get_lat_longs]
+      before_action :authorize_request, only: [:get_property_types, :show, :get_properties, :filter_property, :get_lat_longs]
 
       def get_property_types
         render json: { message: "Property Types.", status: 200, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
+      end
+
+      def get_lat_longs
+        result = []
+        if params[:property_ids].present? && params[:property_ids].kind_of?(Array)
+          params[:property_ids].each do |id|
+            property = Property.find_by(id: id.to_i)
+            if property
+              lat_long_hash = { id: property&.id, lat: property.lat, long: property.long}
+              result.push(lat_long_hash)
+            end
+          end
+          render json: { status: 200, lat_longs: result}
+        end
       end
 
       def filter_property

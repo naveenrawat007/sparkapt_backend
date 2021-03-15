@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       post "/filter_property" => "properties#filter_property"
       post "/get_properties" => "properties#get_properties"
       post "/import_properties" => "properties#import_properties"
+      post "/get_lat_longs" => "properties#get_lat_longs"
 
     end
 

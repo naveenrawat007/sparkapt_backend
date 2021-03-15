@@ -38,7 +38,7 @@ module Api
     end
 
     def plans_list
-      render json: { message: "SmartApt Plans.", status: 200, plans: ActiveModelSerializers::SerializableResource.new(Plan.all.order(created_at: :asc), each_serializer: PlanSerializer)} and return
+      render json: { message: "HiveApt Plans.", status: 200, plans: ActiveModelSerializers::SerializableResource.new(Plan.all.order(created_at: :asc), each_serializer: PlanSerializer)} and return
     end
 
     def contact_inquiry_list

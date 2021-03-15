@@ -2,7 +2,7 @@ class UserWelcomeMailer < ApplicationMailer
 
   def welcome(user)
     @user = User.find(user)
-    mail(to: [@user.email], from:"info@goodlifelocating.com" ,subject: "Welcome to SmartApt… 😊")
+    mail(to: [@user.email], from:"info@goodlifelocating.com" ,subject: "Welcome to HiveAPT… 😊")
 	end
 
   def forget_password(user, domain)
