@@ -14,6 +14,18 @@ module Api
       render json: { status: 200, admin_name: @current_user&.name}
     end
 
+    def approve_user
+      if params[:user_id]
+        user = User.find_by(id: params[:user_id].to_i)
+        if user
+          user.update_column("approved", true)
+          render json: { message: "User Account Successfully Approved.", status: 200, users: ActiveModelSerializers::SerializableResource.new(User.all.where(is_admin: false).order(created_at: :asc), each_serializer: UserSerializer)} and return
+        end
+      else
+        render json: { message: "User not Found", status: 400}
+      end
+    end
+
     def login_as_user
       user = User.find(params[:user_id].to_i)
       token = JsonWebToken.encode(user_id: params[:user_id].to_i)

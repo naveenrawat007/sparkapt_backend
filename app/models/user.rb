@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_many :subscriptions
   has_many :clients
+  belongs_to :city, optional: true
 
   scope :is_admin, -> {where(is_admin: true)}
 

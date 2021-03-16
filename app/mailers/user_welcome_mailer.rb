@@ -16,4 +16,10 @@ class UserWelcomeMailer < ApplicationMailer
     mail(to: 'info@goodlifelocating.com', subject: "Inquiry")
   end
 
+  def account_approve(user)
+    @user = User.find(user)
+    @admin_mail = User.find_by(is_admin: true)&.email
+    mail(to: @admin_mail, from:"info@goodlifelocating.com" ,subject: "New User Added: Needs Approval")
+  end
+
 end

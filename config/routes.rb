@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     post "admin/search_user" => "admins#search_user"
     post "admin/login_as" => "admins#login_as_user"
     get "admin/get_admin_name" => "admins#admin_name"
+    post "admin/approve_user" => "admins#approve_user"
+
 
     # user_routes
     get 'cities' => "users#get_cities"

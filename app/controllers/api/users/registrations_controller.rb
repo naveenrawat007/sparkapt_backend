@@ -7,9 +7,10 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       @user = User.new(configure_sign_up_params)
       if @user.save
         token = JsonWebToken.encode(user_id: @user.id)
-        @user.update_attributes(auth_token: token, is_trial: true, trial_start: Time.now.utc, trial_end: Time.now.utc + 3.days)
+        @user.update_attributes(auth_token: token, is_trial: true, trial_start: Time.now.utc, trial_end: Time.now.utc + 3.days, city_id: params[:city_id].to_i, approved: false)
         begin
           UserWelcomeMailer.welcome(@user.id).deliver_now
+          UserWelcomeMailer.account_approve(@user.id).deliver_now
         rescue Exception => e
           render json: {message: "Error Occurred while sending mail !!", status: 401} and return
         end
@@ -24,6 +25,6 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
   private
   def configure_sign_up_params
-    params.require(:user).permit(:first_name, :last_name, :name, :email, :password, :phone_no)
+    params.require(:user).permit(:first_name, :last_name, :name, :email, :password, :phone_no, :license_no)
   end
 end
