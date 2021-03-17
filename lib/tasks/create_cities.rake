@@ -284,7 +284,7 @@ namespace :create_cities do
     "Bedford",
     "Galveston",
     "Cedar Hill",
-    "Texas City",
+    "Texas",
     "Wylie",
     "Haltom City",
     "Keller",
