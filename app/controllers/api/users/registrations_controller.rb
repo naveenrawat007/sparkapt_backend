@@ -12,14 +12,14 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
           UserWelcomeMailer.welcome(@user.id).deliver_now
           UserWelcomeMailer.account_approve(@user.id).deliver_now
         rescue Exception => e
-          render json: {message: "Error Occurred while sending mail !!", status: 401} and return
+          render json: {message: "Error Occurred while sending mail !!", status: 401}
         end
-        render json: {message: "User Created Successfully.", user: UserSerializer.new(@user, root: false), status: 201}, status: 200
+        render json: {message: "User Created Successfully.", user: UserSerializer.new(@user, root: false), status: 201} and return
       else
-        render json: { message: "Can not add user.", error: "User save error", status: 400}, status: 200
+        render json: { message: "Can not add user.", error: "User save error", status: 400} and return
       end
     else
-      render json: { message: "User already exist with this email.", error: "User exists", status: 409}, status: 200
+      render json: { message: "User already exist with this email.", error: "User exists", status: 409} and return
     end
   end
 
