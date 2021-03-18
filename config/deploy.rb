@@ -5,7 +5,7 @@ require 'mina/rbenv'
 # require 'mina_sidekiq/tasks'
 
 set :application_name, 'smartapt'
-set :domain, '192.53.163.52'
+set :domain, 'api.hiveapt.com'
 set :deploy_to, '/sites/smartapt-backend'
 set :repository, 'git@github.com:complitech/SmartApt-Backend.git'
 set :branch, 'master'
