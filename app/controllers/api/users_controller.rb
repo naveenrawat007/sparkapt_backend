@@ -12,6 +12,19 @@ module Api
       render json: { message: "Cities List.", status: 200, default: {label: default_city&.name, value: default_city&.id} ,cities: ActiveModelSerializers::SerializableResource.new(City.all.order(name: :asc), each_serializer: CitySerializer )} and return
     end
 
+    def send_property_report
+      domain = Rails.application.secrets.website_domain
+      if params[:report].present?
+        report = Report.create(report_params)
+        unique_code = create_unique_code()
+        report.update(report_code: unique_code, property_ids: params[:property_ids])
+        UserWelcomeMailer.property_report(report&.report_code, params[:report][:email],domain).deliver_now
+        render json: {message: "Property Report Detail send to your email Sucessfully !!", status: 200}
+      else
+        render json: {message: "Please fill all details.", status: 401}
+      end
+    end
+
     def contact_us
       if params[:query][:email].present?
         inquiry = Contactinquiry.create(contact_us_params)
@@ -105,6 +118,19 @@ module Api
 
     def contact_us_params
       params.require(:query).permit(:email, :phone, :inquiry_reason, :message)
+    end
+
+    def report_params
+      params.require(:report).permit(:name, :message)
+    end
+
+    def create_unique_code()
+      code = SecureRandom.urlsafe_base64(nil, false)
+      if Report.find_by(report_code: code).present?
+        create_unique_code()
+      else
+        return code
+      end
     end
 
   end

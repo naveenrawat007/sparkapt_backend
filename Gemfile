@@ -47,6 +47,7 @@ gem 'rack-cors'
 gem 'awesome_print'
 gem 'redis'
 # gem "sidekiq"
+gem "paperclip", "~> 5.0.0"
 gem 'whenever'
 gem 'stripe'
 gem 'listen', '~> 3.2'

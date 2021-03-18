@@ -99,13 +99,15 @@ module Api
       end
 
       def update
+        property_data = JSON.parse(params[:property])
         property = Property.find(params[:id].to_i)
         if property
-          property.assign_attributes(property_params)
+          property.assign_attributes(name: property_data["name"], email: property_data["email"], phone: property_data["phone"], specials: property_data["specials"], price: property_data["price"], submarket: property_data["submarket"], zip: property_data["zip"], built_year: property_data["built_year"], escort: property_data["escort"], management_company: property_data["management_company"], web_link: property_data["web_link"], manager_name: property_data["manager_name"], google_rating: property_data["google_rating"], lat: property_data["lat"], long: property_data["long"], address: property_data["address"], google_map: property_data["google_map"])
+
           property.city_id = params[:city_id].to_i if params[:city_id].present?
           if property.save
-            if params[:property][:property_type_details]
-              params[:property][:property_type_details].each do |type_detail|
+            if property_data["property_type_details"]
+              property_data["property_type_details"].each do |type_detail|
                 data = TypeDetail.find(type_detail['id'].to_i)
                 if data
                   data.update(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'])

@@ -4,6 +4,9 @@ class Property < ApplicationRecord
   has_many :types, through: :property_types, dependent: :destroy
   belongs_to :city
 
+  has_attached_file :image
+  validates_attachment_content_type :image, :content_type => ["image/jpg", "image/jpeg", "image/png"]
+
   scope :price_filter, ->(min,max) { joins(:type_details).where('type_details.price >= ? AND type_details.price <= ?', min, max) }
   scope :built_year_filter, ->(from_year,to_year) { where('built_year >= ? AND built_year <= ?', from_year, to_year) }
   scope :escort_filter, -> (escort_percent) {where("escort > ?", escort_percent)}

@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
 
     # user_routes
+    post '/send_report' => "users#send_property_report"
     get 'cities' => "users#get_cities"
     post 'users/forgot_password', to: 'users#forgot_password'
     post 'users/reset_password', to: 'users#reset_password'
