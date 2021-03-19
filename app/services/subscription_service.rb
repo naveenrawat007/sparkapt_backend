@@ -26,7 +26,7 @@ class SubscriptionService
       begin
         result = Stripe::Subscription.delete(subscription&.stripe_subscription_id)
         if result.status == 'canceled'
-          subscription.update(active: false, status: 'canceled')
+          subscription.update(active: false, status: 'Expired')
           OpenStruct.new(message: 'Subscription successfully canceled.', status: 200) and return
         else
           OpenStruct.new(message: 'Subscription cancel failed.', status: 400) and return
@@ -74,7 +74,7 @@ class SubscriptionService
     })
     if result.status == "active"
       user.update(is_trial: false, trial_end: nil)
-      subscription = user.subscriptions.new(plan_id: plan.id, status: 'active', active: true, current_start_datetime: Time.at(result.current_period_start), current_end_datetime: Time.at(result.current_period_end), stripe_subscription_id: result.id)
+      subscription = user.subscriptions.new(plan_id: plan.id, status: 'Active', active: true, current_start_datetime: Time.at(result.current_period_start), current_end_datetime: Time.at(result.current_period_end), stripe_subscription_id: result.id)
       if subscription.save
         OpenStruct.new(status: 200, message: "Thanks for subscribing us.")
       else

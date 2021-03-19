@@ -61,7 +61,9 @@ module Api
             render json: { message: "City not found", status: 402}
           end
         else
-          render json: { message: "Your Trial period is over. Please Subscribe us to get properties", status: 400}
+          if params[:city_id].present?
+            render json: { message: "Your Trial period is over. Please Subscribe us to get properties", status: 400}
+          end
         end
       end
 
@@ -163,7 +165,7 @@ module Api
 
       def validate_property
         if @current_user.is_admin == false
-          if @current_user.is_trial == true || (@current_user.subscriptions.present? && @current_user.try(:subscriptions)&.last&.status == "active")
+          if @current_user.is_trial == true || (@current_user.subscriptions.present? && @current_user.try(:subscriptions)&.last&.status == "Active")
             return true
           else
             return false
