@@ -12,9 +12,7 @@ class UserSerializer < ActiveModel::Serializer
     data[:city] = object&.city ? object&.city&.name : ""
     data[:phone_no] = object.phone_no ? object.phone_no : ""
     data[:is_admin] = object.is_admin
-    data[:is_trial] = object.is_trial
-    data[:trial_start] = object.trial_start
-    data[:trial_end] = object.trial_end
+    data[:status] = object.status
     data[:subscription] = object.subscriptions.last ? object.subscriptions.last : ""
     data[:plan] = object.subscriptions.last ? object.subscriptions.last.plan.name : ""
     data

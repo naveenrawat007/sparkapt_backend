@@ -4,8 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :subscriptions
-  has_many :clients
+  has_many :subscriptions, dependent: :destroy
+  has_many :clients, dependent: :destroy
   belongs_to :city, optional: true
 
   scope :is_admin, -> {where(is_admin: true)}

@@ -73,7 +73,6 @@ class SubscriptionService
       ],
     })
     if result.status == "active"
-      user.update(is_trial: false, trial_end: nil)
       subscription = user.subscriptions.new(plan_id: plan.id, status: 'Active', active: true, current_start_datetime: Time.at(result.current_period_start), current_end_datetime: Time.at(result.current_period_end), stripe_subscription_id: result.id)
       if subscription.save
         OpenStruct.new(status: 200, message: "Thanks for subscribing us.")

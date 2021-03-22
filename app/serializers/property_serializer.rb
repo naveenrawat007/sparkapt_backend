@@ -10,6 +10,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:submarket] = object.submarket ? object.submarket : ""
     data[:zip] = object.zip ? object.zip : ""
     data[:lat] = object.lat ? object.lat : ""
+    data[:city] = object&.city ? object&.city&.name : ""
     data[:long] = object.long ? object.long : ""
     data[:address] = object.address ? object.address : ""
     data[:web_link] = object.web_link ? object.web_link : ""

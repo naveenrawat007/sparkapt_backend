@@ -16,7 +16,6 @@ Rails.application.routes.draw do
 
     end
 
-
     # admin_routes
     get "admin/inquiry_list" => "admins#contact_inquiry_list"
     post "admin/subscriptions" => "admins#subscription_list"
@@ -26,7 +25,6 @@ Rails.application.routes.draw do
     post "admin/login_as" => "admins#login_as_user"
     get "admin/get_admin_name" => "admins#admin_name"
     post "admin/approve_user" => "admins#approve_user"
-
 
     # user_routes
     post '/send_report' => "users#send_property_report"
@@ -38,6 +36,10 @@ Rails.application.routes.draw do
     put "users/update_profile" => "users#update_profile"
     post "users/contact_us" => "users#contact_us"
     post 'search_client' => "clients#search_client"
+
+    # property_report routes
+
+    post "/properties_report" => "reports#properties_report"
 
   end
 
