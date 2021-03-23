@@ -6,8 +6,9 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     if !@old_user
       @user = User.new(configure_sign_up_params)
       if @user.save
+        name = @user.first_name + " " + @user.last_name
         token = JsonWebToken.encode(user_id: @user.id)
-        @user.update_attributes(auth_token: token, city_id: params[:city_id].to_i, approved: false, status: "Pending")
+        @user.update_attributes(name: name, auth_token: token, city_id: params[:city_id].to_i, approved: false, status: "Pending")
         begin
           UserWelcomeMailer.account_approve(@user.id).deliver_now
         rescue Exception => e
