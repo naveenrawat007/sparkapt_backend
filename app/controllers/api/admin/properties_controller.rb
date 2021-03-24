@@ -39,12 +39,12 @@ module Api
 
       def import_properties
         if params[:properties].present? && params[:properties].kind_of?(Array) && params[:properties].count > 2
-          begin
+          # begin
             result = ImportPropertyService.new(params).call
             render json: {message: result.message, status: result.status} and return
-          rescue Exception => e
-            render json: {message: "Invalid Data or some missing fields.Please check and try again", status: 400} and return
-          end
+          # rescue Exception => e
+          #   render json: {message: "Invalid Data or some missing fields.Please check and try again", status: 400} and return
+          # end
         else
           render json: { message: "Invalid Data.", status: 400}
         end
