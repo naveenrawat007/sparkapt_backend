@@ -15,6 +15,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:address] = object.address ? object.address : ""
     data[:web_link] = object.web_link ? object.web_link : ""
     data[:photo_gallery_link] = object.photo_gallery_link ? object.photo_gallery_link : ""
+    data[:floor_plan_link] = object.floor_plan_link ? object.floor_plan_link : ""
     data[:image] = object.image.present? ? object.image.url : ""
     data[:image_file_name] = object.image_file_name ? object.image_file_name : "Select Image"
     data[:manager_name] = object.manager_name ? object.manager_name : ""
