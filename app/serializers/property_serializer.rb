@@ -14,11 +14,11 @@ class PropertySerializer < ActiveModel::Serializer
     data[:long] = object.long ? object.long : ""
     data[:address] = object.address ? object.address : ""
 
-    data[:web_link] = (object.web_link == "none" || object.web_link == "None" || object.web_link == "NA" object.web_link == "N/A" || object.web_link == "N/a" || object.web_link == "n/a" || object.web_link == "na") ? "" : object.web_link
+    data[:web_link] = (object.web_link == "none" || object.web_link == "None" || object.web_link == "NA" || object.web_link == "N/A" || object.web_link == "N/a" || object.web_link == "n/a" || object.web_link == "na") ? "" : object.web_link
 
-    data[:photo_gallery_link] = (object.photo_gallery_link == "none" || object.photo_gallery_link == "None" || object.photo_gallery_link == "NA" object.photo_gallery_link == "N/A" || object.photo_gallery_link == "N/a" || object.photo_gallery_link == "n/a" || object.photo_gallery_link == "na") ? "" : object.photo_gallery_link
+    data[:photo_gallery_link] = (object.photo_gallery_link == "none" || object.photo_gallery_link == "None" || object.photo_gallery_link == "NA" || object.photo_gallery_link == "N/A" || object.photo_gallery_link == "N/a" || object.photo_gallery_link == "n/a" || object.photo_gallery_link == "na") ? "" : object.photo_gallery_link
 
-    data[:floor_plan_link] = (object.floor_plan_link == "none" || object.floor_plan_link == "None" || object.floor_plan_link == "NA" object.floor_plan_link == "N/A" || object.floor_plan_link == "N/a" || object.floor_plan_link == "n/a" || object.floor_plan_link == "na") ? "" : object.floor_plan_link
+    data[:floor_plan_link] = (object.floor_plan_link == "none" || object.floor_plan_link == "None" || object.floor_plan_link == "NA" || object.floor_plan_link == "N/A" || object.floor_plan_link == "N/a" || object.floor_plan_link == "n/a" || object.floor_plan_link == "na") ? "" : object.floor_plan_link
 
     data[:image] = object.image.present? ? object.image.url : ""
     data[:image_file_name] = object.image_file_name ? object.image_file_name : "Select Image"
