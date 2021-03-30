@@ -15,6 +15,17 @@ module Api
     def send_property_report
       domain = Rails.application.secrets.website_domain
       if params[:report].present?
+
+        if params[:saveAsClient] == true
+          old_client = Client.find_by(email: params[:report][:email])
+          if old_client.present?
+            old_client.update(name: params[:name], first_name: params[:name].split(" ").first, last_name: params[:name].split(" ").last, city_id: params[:city_id], status: "Active")
+          else
+            client = @current_user.clients.create(name: params[:name], first_name: params[:name].split(" ").first, last_name: params[:name].split(" ").last, email: params[:report][:email], city_id: params[:city_id], status: "Active", move_in_date: Date.today)
+          end
+
+        end
+
         report = Report.create(report_params)
         unique_code = create_unique_code()
         report.update(report_code: unique_code, property_ids: params[:property_ids])
