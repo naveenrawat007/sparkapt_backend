@@ -20,6 +20,9 @@ class PropertySerializer < ActiveModel::Serializer
 
     data[:floor_plan_link] = (object.floor_plan_link == "none" || object.floor_plan_link == "None" || object.floor_plan_link == "NA" || object.floor_plan_link == "N/A" || object.floor_plan_link == "N/a" || object.floor_plan_link == "n/a" || object.floor_plan_link == "na") ? "" : object.floor_plan_link
 
+    data[:google_review_link] = (object.google_review_link == "none" || object.google_review_link == "None" || object.google_review_link == "NA" || object.google_review_link == "N/A" || object.google_review_link == "N/a" || object.google_review_link == "n/a" || object.google_review_link == "na") ? "" : object.google_review_link
+
+
     data[:image] = object.image.present? ? object.image.url : ""
     data[:image_file_name] = object.image_file_name ? object.image_file_name : "Select Image"
     data[:manager_name] = object.manager_name ? object.manager_name : ""
