@@ -118,11 +118,13 @@ module Api
 
           property.city_id = params[:city_id].to_i if params[:city_id].present?
           if property.save
+            property.type_details.destroy_all
             if property_data["property_type_details"]
               property_data["property_type_details"].each do |type_detail|
-                data = TypeDetail.find(type_detail['id'].to_i)
-                if data
-                  data.update(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'])
+                type = Type.find_by(name: type_detail['property_type'])
+                if type
+                  property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], floor_plan: type_detail['floor_plan'], property_type_name: type_detail['property_type'])
+                  property_type_detail.update(property_id: property&.id)
                 else
                   render json: { message: "PropertyType not Found.", status: 400} and return
                 end
