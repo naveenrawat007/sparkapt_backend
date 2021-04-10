@@ -4,6 +4,7 @@ class UserSerializer < ActiveModel::Serializer
     data[:token] = object.auth_token
     data[:id] = object.id
     data[:name] = object.name ? object.name : ""
+    data[:is_trial] = object.is_trial ? object.is_trial : ""
     data[:first_name] = object.first_name ? object.first_name : ""
     data[:last_name] = object.last_name ? object.last_name : ""
     data[:email] = object.email ? object.email : ""

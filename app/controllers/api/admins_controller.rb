@@ -20,7 +20,7 @@ module Api
         user = User.find_by(id: params[:user_id].to_i)
         if user
           if params[:status] == "approved"
-            user.update_attributes(approved: true, status: "Approved")
+            user.update_attributes(approved: true, status: "Approved", is_trial: true, trial_start: DateTime.now.utc, trial_end: DateTime.now.utc + 30.days)
             UserWelcomeMailer.welcome(user.id).deliver_now
             message = "User Account Successfully Approved."
           else
