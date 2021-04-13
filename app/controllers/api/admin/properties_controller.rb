@@ -82,7 +82,7 @@ module Api
 
       def create
         property_data = JSON.parse(params[:property])
-        property = Property.new(name: property_data["name"], email: property_data["email"], phone: property_data["phone"], specials: property_data["specials"], price: property_data["price"], submarket: property_data["submarket"], zip: property_data["zip"], built_year: property_data["built_year"], escort: property_data["escort"], management_company: property_data["management_company"], web_link: property_data["web_link"], manager_name: property_data["manager_name"], google_rating: property_data["google_rating"], lat: property_data["lat"], long: property_data["long"], address: property_data["address"], google_map: property_data["google_map"], photo_gallery_link: property_data["photo_gallery_link"])
+        property = Property.new(name: property_data["name"], email: property_data["email"], phone: property_data["phone"], specials: property_data["specials"], price: property_data["price"], submarket: property_data["submarket"], zip: property_data["zip"], built_year: property_data["built_year"], escort: property_data["escort"], management_company: property_data["management_company"], web_link: property_data["web_link"], manager_name: property_data["manager_name"], google_rating: property_data["google_rating"], lat: property_data["lat"], long: property_data["long"], address: property_data["address"], google_map: property_data["google_map"], photo_gallery_link: property_data["photo_gallery_link"], floor_plan_link: property_data["floor_plan_link"], google_review_link: property_data["google_review_link"], send_escort: property_data["send_escort"])
 
         if params[:image].present?
           property.image = params[:image]
@@ -93,7 +93,7 @@ module Api
           property_type = Type.all
           property_type.each do |type|
 
-            property_type_detail = type.type_details.create(available: property_data[type&.type_code.to_s]["available"], notes: property_data[type&.type_code.to_s]["notes"], price: property_data[type&.type_code.to_s]["price"])
+            property_type_detail = type.type_details.create(available: property_data[type&.type_code.to_s]["available"], notes: property_data[type&.type_code.to_s]["notes"], price: property_data[type&.type_code.to_s]["price"], floor_plan: property_data[type&.type_code.to_s]["floor_plan"], size: property_data[type&.type_code.to_s]["size"], property_type_name: type.name)
 
             property_type_detail.update(property_id: property&.id)
 
@@ -124,7 +124,7 @@ module Api
                 type = Type.find_by(name: type_detail['property_type'])
                 if type
                   if type_detail['price'] != ""
-                    property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], floor_plan: type_detail['floor_plan'], property_type_name: type_detail['property_type'])
+                    property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], property_type_name: type_detail['property_type'])
                     property_type_detail.update(property_id: property&.id)
                   end
                 else

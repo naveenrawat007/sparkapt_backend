@@ -29,6 +29,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:google_map] = object.google_map ? object.google_map : ""
     data[:built_year] = object.built_year ? object.built_year : ""
     data[:escort] = object.escort ? object.escort : ""
+    data[:send_escort] = object.send_escort ? object.send_escort : ""
     data[:management_company] = object.management_company ? object.management_company : ""
     data[:manager_name] = object.manager_name ? object.manager_name : ""
     data[:google_rating] = object.google_rating ? object.google_rating : ""
