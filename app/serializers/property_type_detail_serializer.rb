@@ -9,7 +9,7 @@ class PropertyTypeDetailSerializer < ActiveModel::Serializer
     data[:notes] = object.notes ? object.notes : ""
     data[:size] = object.size ? object.size : ""
     data[:floor_plan] = object.floor_plan ? object.floor_plan : ""
-    data[:property_type] = object.type ? object.try(:type)&.name : ""
+    data[:property_type] = object.property_type_name ? object.property_type_name : ""
     data
   end
 
