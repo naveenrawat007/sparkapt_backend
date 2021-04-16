@@ -22,10 +22,10 @@ class UserWelcomeMailer < ApplicationMailer
     mail(to: @admin_mail,subject: "New User Added: Needs Approval")
   end
 
-  def property_report(code, email, domain)
+  def property_report(code, email, domain, user_email)
     @domain = domain
     @code = code
-    mail(to: email ,subject: "Property Report Detail")
+    mail(to: email , reply_to: user_email, subject: "Property Report Detail")
   end
 
 end

@@ -29,7 +29,7 @@ module Api
         report = Report.create(message: params[:report][:message], name: params[:first_name])
         unique_code = create_unique_code()
         report.update(report_code: unique_code, property_ids: params[:property_ids])
-        UserWelcomeMailer.property_report(report&.report_code, params[:report][:email],domain).deliver_now
+        UserWelcomeMailer.property_report(report&.report_code, params[:report][:email],domain, @current_user&.email).deliver_now
         render json: {message: "Property Report Detail send to your email Sucessfully !!", status: 200}
       else
         render json: {message: "Please fill all details.", status: 401}
