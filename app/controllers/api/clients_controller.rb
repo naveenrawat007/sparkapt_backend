@@ -40,7 +40,7 @@ module Api
         client.city_id = params[:city_id].to_i if params[:city_id].present?
         if client.save
           name = client&.first_name + " " + client&.last_name
-          client.update_attributes(move_in_date: params[:movein_date], name: name, status: "Active")
+          client.update_attributes(move_in_date: params[:movein_date], name: name, status: "New")
           clients = @current_user.clients.order(created_at: :asc)
           render json: { message: "Client created sucessfully.", status: 200, clients: ActiveModelSerializers::SerializableResource.new(clients, each_serializer: ClientSerializer)} and return
         else
