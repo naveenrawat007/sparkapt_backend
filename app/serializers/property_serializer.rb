@@ -28,6 +28,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:manager_name] = object.manager_name ? object.manager_name : ""
     data[:google_map] = object.google_map ? object.google_map : ""
     data[:built_year] = object.built_year ? object.built_year : ""
+    data[:renovated] = object.renovated ? object.renovated : ""
     data[:escort] = object.escort ? object.escort : ""
     data[:send_escort] = object.send_escort ? object.send_escort : ""
     data[:management_company] = object.management_company ? object.management_company : ""

@@ -12,6 +12,25 @@ module Api
       render json: { message: "Cities List.", status: 200, default: {label: default_city&.name, value: default_city&.id} ,cities: ActiveModelSerializers::SerializableResource.new(City.all.order(name: :asc), each_serializer: CitySerializer )} and return
     end
 
+    def multiple_report
+      domain = Rails.application.secrets.website_domain
+      if params[:report].present?
+        report = Report.create(message: params[:report][:message], name: params[:name])
+        unique_code = create_unique_code()
+        report.update(report_code: unique_code, property_ids: params[:property_ids])
+
+        if params[:clients].present? && params[:clients].kind_of?(Array)
+          params[:clients].each do |id|
+            client = Client.find_by(id: id.to_i)
+
+            UserWelcomeMailer.property_report(report&.report_code, client&.email, domain, @current_user&.email).deliver_now
+
+          end
+        end
+        render json: {message: "Property Report Detail send Sucessfully !!", status: 200}
+      end
+    end
+
     def send_property_report
       domain = Rails.application.secrets.website_domain
       if params[:report].present?

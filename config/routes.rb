@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     post "admin/approve_user" => "admins#approve_user"
 
     # user_routes
+    post '/multiple_report' => "users#multiple_report"
     post '/send_report' => "users#send_property_report"
     get 'cities' => "users#get_cities"
     get 'clients_list' => "clients#client_list"
