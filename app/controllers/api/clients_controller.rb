@@ -20,6 +20,16 @@ module Api
       render json: { message: "Clients List.", status: 200, clients: ActiveModelSerializers::SerializableResource.new(@current_user.clients.order(created_at: :asc), each_serializer: ClientSerializer)} and return
     end
 
+    def client_status
+      client = @current_user.clients.find_by(id: params[:id])
+      if client
+        client.update(status: params[:status])
+        render json: { message: "Client status change sucessfully", status: 200} and return
+      else
+        render json: { message: "Client not found", status: 400} and return
+      end
+    end
+
     def search_client
       if @current_user
         city = City.find(params[:city_id].to_i)&.name

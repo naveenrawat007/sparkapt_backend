@@ -31,7 +31,8 @@ class UserWelcomeMailer < ApplicationMailer
   def tour_req(params)
     @name = params[:client_name]
     @property_name = params[:name]
-    @date = DateTime.parse(params[:startDate])
+    @date = Date.parse(params[:startDate]).strftime("%b, %d, %Y")
+    @time = params[:time]
     mail(to: params[:agentEmail], subject: "Property Tour Request")
   end
 
