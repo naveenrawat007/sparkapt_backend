@@ -42,6 +42,8 @@ Rails.application.routes.draw do
     # property_report routes
 
     post "/properties_report" => "reports#properties_report"
+    post "/tour_request" => "reports#tour_request"
+
 
   end
 

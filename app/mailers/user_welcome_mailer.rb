@@ -28,4 +28,11 @@ class UserWelcomeMailer < ApplicationMailer
     mail(to: email , reply_to: user_email, subject: "Property Report Detail")
   end
 
+  def tour_req(params)
+    @name = params[:client_name]
+    @property_name = params[:name]
+    @date = DateTime.parse(params[:startDate])
+    mail(to: params[:agentEmail], subject: "Property Tour Request")
+  end
+
 end

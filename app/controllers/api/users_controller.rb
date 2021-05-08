@@ -17,7 +17,7 @@ module Api
       if params[:report].present?
         report = Report.create(message: params[:report][:message], name: params[:name])
         unique_code = create_unique_code()
-        report.update(report_code: unique_code, property_ids: params[:property_ids])
+        report.update(report_code: unique_code, property_ids: params[:property_ids], agent_email: @current_user&.email)
 
         if params[:clients].present? && params[:clients].kind_of?(Array)
           params[:clients].each do |id|
@@ -45,7 +45,7 @@ module Api
 
         end
 
-        report = Report.create(message: params[:report][:message], name: params[:first_name])
+        report = Report.create(message: params[:report][:message], name: params[:first_name], agent_email: @current_user&.email)
         unique_code = create_unique_code()
         report.update(report_code: unique_code, property_ids: params[:property_ids])
         UserWelcomeMailer.property_report(report&.report_code, params[:report][:email],domain, @current_user&.email).deliver_now
