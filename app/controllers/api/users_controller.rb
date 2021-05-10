@@ -36,11 +36,11 @@ module Api
       if params[:report].present?
 
         if params[:saveAsClient] == true
-          old_client = Client.find_by(email: params[:report][:email])
+          old_client = Client.find_by(email: params[:email])
           if old_client.present?
             old_client.update(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], city_id: params[:city_id], status: "Active")
           else
-            client = @current_user.clients.create(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], email: params[:report][:email], city_id: params[:city_id], status: "Active", move_in_date: Date.today)
+            client = @current_user.clients.create(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], email: params[:email], city_id: params[:city_id], status: "Active", move_in_date: Date.today)
           end
 
         end
@@ -48,7 +48,7 @@ module Api
         report = Report.create(message: params[:report][:message], name: params[:first_name], agent_email: @current_user&.email)
         unique_code = create_unique_code()
         report.update(report_code: unique_code, property_ids: params[:property_ids])
-        UserWelcomeMailer.property_report(report&.report_code, params[:report][:email],domain, @current_user&.email).deliver_now
+        UserWelcomeMailer.property_report(report&.report_code, params[:email],domain, @current_user&.email).deliver_now
         render json: {message: "Property Report Detail send to your email Sucessfully !!", status: 200}
       else
         render json: {message: "Please fill all details.", status: 401}
