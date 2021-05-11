@@ -20,6 +20,15 @@ module Api
       render json: { message: "Clients List.", status: 200, clients: ActiveModelSerializers::SerializableResource.new(@current_user.clients.order(created_at: :asc), each_serializer: ClientSerializer)} and return
     end
 
+    def custom_client_list
+      client_array = []
+      @current_user.clients.each do |client|
+        client_hash = { value: client.id, label: client.name}
+        client_array.push(client_hash)
+      end
+      render json: { status: 200, clients: client_array}
+    end
+
     def client_status
       client = @current_user.clients.find_by(id: params[:id])
       if client

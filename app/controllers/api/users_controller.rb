@@ -15,8 +15,9 @@ module Api
     def multiple_report
       domain = Rails.application.secrets.website_domain
       if params[:report].present?
-        report = Report.create(message: params[:report][:message], name: params[:name])
         unique_code = create_unique_code()
+        report = Report.create(message: params[:report][:message], name: params[:name])
+
         report.update(report_code: unique_code, property_ids: params[:property_ids], agent_email: @current_user&.email)
 
         if params[:clients].present? && params[:clients].kind_of?(Array)
@@ -33,23 +34,44 @@ module Api
 
     def send_property_report
       domain = Rails.application.secrets.website_domain
+      unique_code = create_unique_code()
       if params[:report].present?
 
-        if params[:saveAsClient] == true
-          old_client = Client.find_by(email: params[:email])
-          if old_client.present?
-            old_client.update(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], city_id: params[:city_id], status: "Active")
-          else
-            client = @current_user.clients.create(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], email: params[:email], city_id: params[:city_id], status: "Active", move_in_date: Date.today)
+        if params[:clientType] == "new"
+          if params[:saveAsClient] == true
+            old_client = Client.find_by(email: params[:email])
+            if old_client.present?
+              old_client.update(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], city_id: params[:city_id], status: "Active")
+            else
+              client = @current_user.clients.create(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], email: params[:email], city_id: params[:city_id], status: "Active", move_in_date: Date.today)
+            end
+          end
+          report = Report.create(message: params[:report][:message], name: params[:first_name], agent_email: @current_user&.email, report_code: unique_code, property_ids: params[:property_ids])
+
+          begin
+            UserWelcomeMailer.property_report(report&.report_code, params[:email],domain, @current_user&.email).deliver_now
+          rescue ExceptionName
+            render json: {message: "Error Occurred while sending mail !!", status: 401} and return
           end
 
+        else
+          report = Report.create(message: params[:report][:message], name: "", agent_email: @current_user&.email, report_code: unique_code, property_ids: params[:property_ids])
+
+          if params[:multipleClient].present? && params[:multipleClient].kind_of?(Array)
+            params[:multipleClient].each do |client_hash|
+              client = @current_user.clients.find_by(id: client_hash["value"].to_i)
+              begin
+                UserWelcomeMailer.property_report(report&.report_code, client&.email, domain, @current_user&.email).deliver_now
+              rescue ExceptionName
+                render json: {message: "Error Occurred while sending mail !!", status: 401} and return
+              end
+            end
+
+          end
         end
 
-        report = Report.create(message: params[:report][:message], name: params[:first_name], agent_email: @current_user&.email)
-        unique_code = create_unique_code()
-        report.update(report_code: unique_code, property_ids: params[:property_ids])
-        UserWelcomeMailer.property_report(report&.report_code, params[:email],domain, @current_user&.email).deliver_now
         render json: {message: "Property Report Detail send to your email Sucessfully !!", status: 200}
+
       else
         render json: {message: "Please fill all details.", status: 401}
       end
