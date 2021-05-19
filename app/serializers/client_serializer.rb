@@ -9,8 +9,10 @@ class ClientSerializer < ActiveModel::Serializer
     data[:phone] = object.phone ? object.phone : ""
     data[:status] = object.status ? object.status : ""
     data[:budget] = object.budget
-    data[:mve_in_date] = object.move_in_date ? object.move_in_date.strftime('%m/%d/%Y') : ''
+    data[:mve_in_date] = object.move_in_date ? object.move_in_date.strftime('%b %d, %Y') : ''
     data[:move_in_date] = object.move_in_date ? object.move_in_date.strftime('%Y-%m-%d') : ''
+    data[:lease_end_date] = object.lease_end_date ? object.lease_end_date.strftime('%Y-%m-%d') : ''
+    data[:next_follow_up] = object.next_follow_up ? object.next_follow_up.strftime('%Y-%m-%d') : ''
     data[:notes] = object.notes
     data
   end
