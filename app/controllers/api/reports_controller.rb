@@ -6,7 +6,7 @@ module Api
         report = Report.find_by(report_code: params[:report_code].to_s)
         if report
           properties = Property.where(id: report&.property_ids)
-          render json: { message: report&.message, name: report&.name, agent_email: report.agent_email ,status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties.uniq, each_serializer: PropertySerializer)} and return
+          render json: { message: report&.message, name: report&.name, agent_email: report.agent_email ,status: 200, ids: report&.property_ids, properties: ActiveModelSerializers::SerializableResource.new(properties.uniq, each_serializer: PropertySerializer)} and return
         else
           render json: { message: "Property Report not found.", status: 400 } and return
         end
