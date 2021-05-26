@@ -3,7 +3,6 @@ module Api
     class AssistantsController < Api::MainController
       before_action :authorize_admin_request
 
-
       def create_virtual_assistant
         va_user = User.new(configure_sign_up_params)
         if va_user.save

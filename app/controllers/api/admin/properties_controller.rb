@@ -1,7 +1,7 @@
 module Api
   module Admin
     class PropertiesController < Api::MainController
-      before_action :authorize_admin_request, except: [:get_property_types, :show, :get_properties, :filter_property, :get_lat_longs]
+      before_action :check_role, except: [:get_property_types, :show, :get_properties, :filter_property, :get_lat_longs]
       before_action :authorize_request, only: [:get_property_types, :get_properties, :filter_property], except: [:get_lat_longs, :show]
 
       def get_property_types
