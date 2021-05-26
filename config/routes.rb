@@ -14,6 +14,15 @@ Rails.application.routes.draw do
       post "/import_properties" => "properties#import_properties"
       post "/get_lat_longs" => "properties#get_lat_longs"
 
+      # virtual assistant CRUD routes
+
+      get '/virtual_assistants' => "assistants#assistants_list"
+      post '/virtual_assistants' => "assistants#create_virtual_assistant"
+      delete '/virtual_assistants/:id' => "assistants#destroy_assistant"
+      get '/virtual_assistants/:id' => "assistants#show"
+      put '/virtual_assistants/:id' => "assistants#update_assistant"
+
+
     end
 
     # admin_routes
@@ -45,7 +54,6 @@ Rails.application.routes.draw do
 
     post "/properties_report" => "reports#properties_report"
     post "/tour_request" => "reports#tour_request"
-
 
   end
 
