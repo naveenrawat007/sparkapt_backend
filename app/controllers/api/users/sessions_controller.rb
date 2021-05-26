@@ -5,7 +5,7 @@ class Api::Users::SessionsController < Devise::SessionsController
     @user = User.find_by(email:params[:user][:email].downcase)
     if @user
       if @user.valid_password?(params[:user][:password])
-        if @user.approved || @user.is_admin
+        if @user.approved || @user.is_admin || @user.is_va
           token = JsonWebToken.encode(user_id: @user.id)
           @user.update_column('auth_token', token)
           render json: {message: "User Login Successfully.", user: UserSerializer.new(@user, root: false), status: 201} and return

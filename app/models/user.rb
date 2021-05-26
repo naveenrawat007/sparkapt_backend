@@ -8,6 +8,4 @@ class User < ApplicationRecord
   has_many :clients, dependent: :destroy
   belongs_to :city, optional: true
 
-  scope :is_admin, -> {where(is_admin: true)}
-
 end

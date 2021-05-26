@@ -169,7 +169,7 @@ module Api
       end
 
       def validate_property
-        if @current_user.is_admin == false
+        if @current_user.is_admin == false && @current_user.is_va == false
           if @current_user.is_trial == true
             return true
           elsif @current_user.subscriptions.present? && @current_user.try(:subscriptions)&.last&.status == "Active"

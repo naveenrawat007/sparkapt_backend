@@ -42,7 +42,7 @@ module Api
 
     def users_list
       if @current_user
-        render json: { message: "User List.", status: 200, users: ActiveModelSerializers::SerializableResource.new(User.all.where(is_admin: false).order(created_at: :asc), each_serializer: UserSerializer)} and return
+        render json: { message: "User List.", status: 200, users: ActiveModelSerializers::SerializableResource.new(User.all.where(is_admin: false, is_va: false).order(created_at: :asc), each_serializer: UserSerializer)} and return
       else
         render json: { message: "Admin not found", status: 400}
       end
@@ -50,7 +50,7 @@ module Api
 
     def search_user
       if @current_user
-        users = User.all.where.not(is_admin: true).where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR lower(phone_no) LIKE :search OR lower(name) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :asc)
+        users = User.all.where.not(is_admin: true, is_va: true).where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR lower(phone_no) LIKE :search OR lower(name) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :asc)
         render json: { message: "Users List.", status: 200, users: ActiveModelSerializers::SerializableResource.new(users, each_serializer: UserSerializer)} and return
       else
         render json: { message: "User not found", status: 400}
