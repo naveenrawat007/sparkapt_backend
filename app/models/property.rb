@@ -11,7 +11,7 @@ class Property < ApplicationRecord
   scope :built_year_filter, ->(from_year,to_year) { where('built_year >= ? AND built_year <= ?', from_year, to_year) }
   scope :escort_filter, -> (escort_percent) {where("escort >= ?", escort_percent)}
   scope :send_escort_filter, -> (send_escort_percent) {where("send_escort >= ?", send_escort_percent)}
-
+  scope :zip_filter, -> (zip) {where(zip: zip)}
   scope :sq_feet_filter, -> (sq_feet) {joins(:type_details).where("size >= ?", sq_feet)}
 
   scope :bedroom_filter, -> (property_type) {joins(:type_details).where("type_details.property_type_name = ?", property_type)}
