@@ -69,7 +69,6 @@ GEM
     byebug (11.1.3)
     case_transform (0.2)
       activesupport
-    chronic (0.10.2)
     climate_control (0.2.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
@@ -194,6 +193,10 @@ GEM
       net-http-persistent (~> 3.0)
     thor (1.1.0)
     thread_safe (0.3.6)
+    twilio-ruby (5.24.0)
+      faraday (~> 0.9)
+      jwt (>= 1.5, <= 2.5)
+      nokogiri (>= 1.6, < 2.0)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
     unicorn (5.8.0)
@@ -204,8 +207,6 @@ GEM
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    whenever (1.0.0)
-      chronic (>= 0.6.3)
     zeitwerk (2.4.2)
 
 PLATFORMS
@@ -229,9 +230,9 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   stripe
+  twilio-ruby
   tzinfo-data
   unicorn
-  whenever
 
 RUBY VERSION
    ruby 2.7.0p0
