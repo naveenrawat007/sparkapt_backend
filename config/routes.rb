@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post "/get_properties" => "properties#get_properties"
       post "/import_properties" => "properties#import_properties"
       post "/get_lat_longs" => "properties#get_lat_longs"
+      post "/properties_locations" => "properties#properties_locations"
 
       # virtual assistant CRUD routes
 
