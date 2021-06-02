@@ -63,7 +63,6 @@ module Api
       end
 
       def get_properties
-        max_price =
         is_valid = validate_property
         if is_valid
           if params[:city_id].present?
