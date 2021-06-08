@@ -5,7 +5,7 @@ module Api
       before_action :authorize_request, only: [:get_property_types, :get_properties, :filter_property, :properties_locations], except: [:get_lat_longs, :show]
 
       def get_property_types
-        render json: { message: "Property Types.", status: 200, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
+        render json: { message: "Property Types.", status: 200, markets: Property.pluck(:submarket).uniq, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
       end
 
       def get_lat_longs
