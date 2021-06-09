@@ -9,7 +9,10 @@ class Property < ApplicationRecord
 
   scope :min_price_filter, ->(min) { joins(:type_details).where('type_details.price >= ?', min) }
   scope :max_price_filter, ->(max) { joins(:type_details).where('type_details.price <= ?', max) }
-  scope :built_year_filter, ->(from_year,to_year) { where('built_year >= ? AND built_year <= ?', from_year, to_year) }
+
+  scope :year_from_filter, ->(from_year) { where('built_year >= ?', from_year) }
+  scope :year_to_filter, ->(to_year) { where('built_year <= ?', to_year) }
+
   scope :market_filter, -> (submarket) {where(submarket: submarket)}
   scope :escort_filter, -> (escort_percent) {where("escort >= ?", escort_percent)}
   scope :send_escort_filter, -> (send_escort_percent) {where("send_escort >= ?", send_escort_percent)}

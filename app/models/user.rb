@@ -7,5 +7,4 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :clients, dependent: :destroy
   belongs_to :city, optional: true
-
 end
