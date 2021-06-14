@@ -5,7 +5,7 @@ module Api
     def index
       reports = []
       @current_user.clients.includes(:reports).references(:reports).each do |client|
-        client.reports.each do |report|
+        client.reports.order(created_at: :desc).each do |report|
           report_hash = { title: report.title, created_at: report.created_at.strftime("%a, %d %b %Y"), client_name: client.name, code: report.report_code}
           reports.push(report_hash)
         end

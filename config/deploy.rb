@@ -14,7 +14,7 @@ set :keep_releases, 5
 set :user, 'root'
 # set :port, '19070'
 set :restart_command, '/etc/init.d/smartapt-backend restart'
-set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp/pids', 'tmp/sockets', 'tmp/log', 'storage')
+set :shared_dirs, fetch(:shared_dirs, []).push('log', 'public/system' ,'tmp/pids', 'tmp/sockets', 'tmp/log', 'storage')
 set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/unicorn.rb', 'config/secrets.yml', 'config/storage.yml', 'config/sidekiq.yml', 'config/environments/production.rb', 'config/cable.yml', 'config/credentials.yml.enc')
 
 task :remote_environment do
@@ -44,7 +44,7 @@ task :deploy do
     invoke :'bundle:install'
     #invoke :'rails:db_create'
     invoke :'rails:db_migrate'
-    #invoke :'rails:assets_precompile'
+    # invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
     invoke :'restart'
     on :launch do

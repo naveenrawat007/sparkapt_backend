@@ -155,6 +155,27 @@ module Api
         end
       end
 
+      def va_update_property
+        property = Property.find_by(id: params[:id].to_i)
+        if property.present?
+          property.update(google_rating: params[:rating])
+          property.type_details.destroy_all
+
+          params[:details].each do |type_detail|
+            type = Type.find_by(name: type_detail['property_type'])
+            if type
+              property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], property_type_name: type_detail['property_type'])
+              property_type_detail.update(property_id: property&.id)
+            else
+              render json: { message: "PropertyType not Found.", status: 400} and return
+            end
+          end
+          render json: { message: "Property Update Sucessfully.", status: 200}
+        else
+          render json: { message: "Property not Found.", status: 400}
+        end
+      end
+
       def destroy
         property = Property.find_by(id: params[:id].to_i)
         if property
