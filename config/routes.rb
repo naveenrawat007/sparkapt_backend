@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     namespace 'admin' do
       resources :notifications
       resources :properties
+      resources :leads
       get "/property_types" => "properties#get_property_types"
       get "/latest_notification" => "notifications#get_latest_notification"
       post "/filter_property" => "properties#filter_property"
