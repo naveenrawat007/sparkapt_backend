@@ -70,12 +70,17 @@ module Api
       def get_properties
         is_valid = validate_property
         if is_valid
-          if params[:city_id].present?
-            properties = get_city_properties(params[:city_id])
-            properties = properties.order(created_at: :asc)
-            render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties.uniq, each_serializer: PropertySerializer)} and return
+          if params[:ids].present?
+            properties = Property.where(id: params[:ids])
+            render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties, each_serializer: PropertySerializer)} and return
           else
-            render json: { message: "City not found", status: 402}
+            if params[:city_id].present?
+              properties = get_city_properties(params[:city_id])
+              properties = properties.order(created_at: :asc)
+              render json: { message: "Properties.", status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties.uniq, each_serializer: PropertySerializer)} and return
+            else
+              render json: { message: "City not found", status: 402}
+            end
           end
         else
           if params[:city_id].present?
