@@ -6,7 +6,7 @@ module Api
 
       def get_property_types
         properties = get_city_properties(params[:city_id])
-        if params[:city_id].present?
+        if properties.present?
           render json: { message: "Property Types.", status: 200, markets: properties.pluck(:submarket).uniq, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
         end
       end
