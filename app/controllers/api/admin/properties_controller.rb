@@ -1,14 +1,16 @@
 module Api
   module Admin
     class PropertiesController < Api::MainController
-      before_action :check_role, except: [:get_property_types, :show, :get_properties, :filter_property, :get_lat_longs]
-      before_action :authorize_request, only: [:get_properties, :filter_property, :properties_locations], except: [:get_lat_longs, :show, :get_property_types]
+      before_action :check_role, except: [:get_property_types, :show, :get_properties, :filter_property, :get_lat_longs, :get_markets]
+      before_action :authorize_request, only: [:get_properties, :filter_property, :properties_locations], except: [:get_lat_longs, :show, :get_markets]
 
       def get_property_types
+        render json: { message: "Property Types.", status: 200, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
+      end
+
+      def get_markets
         properties = get_city_properties(params[:city_id])
-        if properties.present?
-          render json: { message: "Property Types.", status: 200, markets: properties.pluck(:submarket).uniq, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
-        end
+        render json: {status: 200, markets: properties.pluck(:submarket).uniq}
       end
 
       def get_lat_longs
