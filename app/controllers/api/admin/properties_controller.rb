@@ -2,10 +2,13 @@ module Api
   module Admin
     class PropertiesController < Api::MainController
       before_action :check_role, except: [:get_property_types, :show, :get_properties, :filter_property, :get_lat_longs]
-      before_action :authorize_request, only: [:get_property_types, :get_properties, :filter_property, :properties_locations], except: [:get_lat_longs, :show]
+      before_action :authorize_request, only: [:get_properties, :filter_property, :properties_locations], except: [:get_lat_longs, :show, :get_property_types]
 
       def get_property_types
-        render json: { message: "Property Types.", status: 200, markets: Property.pluck(:submarket).uniq, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
+        properties = get_city_properties(params[:city_id])
+        if params[:city_id].present?
+          render json: { message: "Property Types.", status: 200, markets: properties.pluck(:submarket).uniq, property_types: ActiveModelSerializers::SerializableResource.new(Type.all, each_serializer: PropertyTypeSerializer)} and return
+        end
       end
 
       def get_lat_longs
@@ -190,11 +193,13 @@ module Api
       private
 
       def get_city_properties(id)
-        city = City.find_by(id: id)&.name
-        if city == 'All'
-          properties = Property.all
-        else
-          properties = Property.where(city_id: id)
+        city = City.find_by(id: id)
+        if city
+          if city&.name == 'All'
+            properties = Property.all
+          else
+            properties = city.properties
+          end
         end
       end
 
