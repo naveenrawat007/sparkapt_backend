@@ -6,6 +6,9 @@ class FilterPropertyService
     @max_price = params[:new_filter][:max_price] == "" ? TypeDetail.maximum(:price) : params[:new_filter][:max_price].to_i
     @min_price = params[:new_filter][:min_price] == "" ? TypeDetail.minimum(:price) : params[:new_filter][:min_price].to_i
 
+    @available_from = params[:avail_from] ? params[:avail_from].to_date : TypeDetail.minimum(:move_in)
+    @available_to = params[:avail_to] ? params[:avail_to].to_date : TypeDetail.maximum(:move_in)
+
     @from_year = @params[:yearFilter][:from_year] == "" ? Property.minimum(:built_year) : @params[:yearFilter][:from_year].to_i
     @to_year = @params[:yearFilter][:to_year] == "" ? Property.maximum(:built_year) : @params[:yearFilter][:to_year].to_i
 
@@ -19,9 +22,9 @@ class FilterPropertyService
 
   def call
     if @params[:sq_ft] != ""
-      properties = @properties.bedroom_filter(@params[:show_property_type]).year_from_filter(@from_year).year_to_filter(@to_year).min_price_filter(@min_price).max_price_filter(@max_price).sq_feet_filter(@sq_feet).market_filter(@market).escort_filter(@commission).zip_filter(@zip).send_escort_filter(@send_commisson).search_filter(@params[:search]).order(created_at: :asc)
+      properties = @properties.bedroom_filter(@params[:show_property_type]).year_from_filter(@from_year).year_to_filter(@to_year).min_price_filter(@min_price).max_price_filter(@max_price).sq_feet_filter(@sq_feet).market_filter(@market).escort_filter(@commission).avail_from_filter(@available_from).avail_to_filter(@available_to).zip_filter(@zip).send_escort_filter(@send_commisson).search_filter(@params[:search]).order(created_at: :asc)
     else
-      properties = @properties.bedroom_filter(@params[:show_property_type]).year_from_filter(@from_year).year_to_filter(@to_year).min_price_filter(@min_price).max_price_filter(@max_price).escort_filter(@commission).market_filter(@market).send_escort_filter(@send_commisson).zip_filter(@zip).search_filter(@params[:search]).order(created_at: :asc)
+      properties = @properties.bedroom_filter(@params[:show_property_type]).year_from_filter(@from_year).year_to_filter(@to_year).min_price_filter(@min_price).avail_from_filter(@available_from).avail_to_filter(@available_to).max_price_filter(@max_price).escort_filter(@commission).market_filter(@market).send_escort_filter(@send_commisson).zip_filter(@zip).search_filter(@params[:search]).order(created_at: :asc)
     end
 
     OpenStruct.new(message: 'Properties.', status: 200, properties: ActiveModelSerializers::SerializableResource.new(properties.uniq, each_serializer: PropertySerializer))

@@ -115,7 +115,7 @@ module Api
           property_type = Type.all
           property_type.each do |type|
 
-            property_type_detail = type.type_details.create(available: property_data[type&.type_code.to_s]["available"], notes: property_data[type&.type_code.to_s]["notes"], price: property_data[type&.type_code.to_s]["price"], floor_plan: property_data[type&.type_code.to_s]["floor_plan"], size: property_data[type&.type_code.to_s]["size"], property_type_name: type.name)
+            property_type_detail = type.type_details.create(available: property_data[type&.type_code.to_s]["move_in"], notes: property_data[type&.type_code.to_s]["notes"], price: property_data[type&.type_code.to_s]["price"], floor_plan: property_data[type&.type_code.to_s]["floor_plan"], size: property_data[type&.type_code.to_s]["size"], property_type_name: type.name)
 
             property_type_detail.update(property_id: property&.id)
 
@@ -145,7 +145,7 @@ module Api
               property_data["property_type_details"].each do |type_detail|
                 type = Type.find_by(name: type_detail['property_type'])
                 if type
-                  property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], property_type_name: type_detail['property_type'])
+                  property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], move_in: type_detail['move_in'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], property_type_name: type_detail['property_type'], bath: type_detail['bath'], den: type_detail['den'])
                   property_type_detail.update(property_id: property&.id)
                 else
                   render json: { message: "PropertyType not Found.", status: 400} and return
@@ -172,7 +172,7 @@ module Api
           params[:details].each do |type_detail|
             type = Type.find_by(name: type_detail['property_type'])
             if type
-              property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], available: type_detail['available'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], property_type_name: type_detail['property_type'])
+              property_type_detail = type.type_details.create(notes: type_detail['notes'], price: type_detail['price'], move_in: type_detail['move_in'], floor_plan: type_detail['floor_plan'], size: type_detail['size'], property_type_name: type_detail['property_type'], bath: type_detail['bath'], den: type_detail['den'])
               property_type_detail.update(property_id: property&.id)
             else
               render json: { message: "PropertyType not Found.", status: 400} and return

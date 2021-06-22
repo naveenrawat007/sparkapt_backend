@@ -10,6 +10,9 @@ class Property < ApplicationRecord
   scope :min_price_filter, ->(min) { joins(:type_details).where('type_details.price >= ?', min) }
   scope :max_price_filter, ->(max) { joins(:type_details).where('type_details.price <= ?', max) }
 
+  scope :avail_from_filter, ->(date) { joins(:type_details).where('type_details.move_in >= ?', date) }
+  scope :avail_to_filter, ->(date) { joins(:type_details).where('type_details.move_in <= ?', date) }
+
   scope :year_from_filter, ->(from_year) { where('built_year >= ?', from_year) }
   scope :year_to_filter, ->(to_year) { where('built_year <= ?', to_year) }
 
