@@ -2,7 +2,7 @@ class PropertyTypeDetailSerializer < ActiveModel::Serializer
   def attributes(*args)
     data = super
     data[:id] = object.id
-    data[:available] = object.move_in ? object.move_in.strftime("%b %d,%Y") : ""
+    data[:available] = object.move_in ? object.move_in.strftime("%b %d, %Y") : ""
     data[:move_in] = object.move_in ? object.move_in.strftime('%Y-%m-%d') : ''
     data[:price] = object.price ? object.price : ""
     data[:notes] = object.notes ? object.notes : ""
