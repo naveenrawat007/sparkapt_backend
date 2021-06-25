@@ -17,7 +17,7 @@ class FilterPropertyService
     @send_commisson = params[:send_commison] == "" ? 0 : params[:send_commison].to_i
     @bedroom_type = params[:show_property_type]
     @zip = params[:new_filter][:zip] == "" ? properties.pluck(:zip).uniq : params[:new_filter][:zip]
-    @market = params[:selMarket] == "" ? properties.pluck(:submarket).uniq : params[:selMarket]
+    @market = params[:selMarket] == [] ? properties.pluck(:submarket).uniq : params[:selMarket]&.map{ |market| market.values }&.flatten&.uniq
   end
 
   def call

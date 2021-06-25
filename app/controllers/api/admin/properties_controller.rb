@@ -9,8 +9,15 @@ module Api
       end
 
       def get_markets
+        submarket_array = []
         properties = get_city_properties(params[:city_id])
-        render json: {status: 200, markets: properties.pluck(:submarket).uniq}
+        if properties.pluck(:submarket).uniq.present?
+          properties.pluck(:submarket).uniq.each do |market|
+            submarket_hash = { value: market, label: market}
+            submarket_array.push(submarket_hash)
+          end
+          render json: {status: 200, markets: submarket_array} and return
+        end
       end
 
       def get_lat_longs
