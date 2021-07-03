@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       post "/get_lat_longs" => "properties#get_lat_longs"
       post "/properties_locations" => "properties#properties_locations"
       put "/properties/va_update_property/:id" => "properties#va_update_property"
+      post "/selected_locations" => "properties#selected_locations"
+
 
       # virtual assistant CRUD routes
 
