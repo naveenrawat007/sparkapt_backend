@@ -46,6 +46,18 @@ module Api
         render json: { status: 200, lat_longs: result}
       end
 
+      def selected_locations
+        result = []
+        city = City.find_by_id(params[:city])
+        if city&.properties.present? && params[:ids].present?
+          city.properties.where(id: params[:ids]).each do |property|
+            lat_long_hash = { id: property&.id, lat: property.lat, long: property.long}
+            result.push(lat_long_hash)
+          end
+        end
+        render json: { status: 200, lat_longs: result}
+      end
+
       def filter_property
         is_valid = validate_property
         if is_valid
