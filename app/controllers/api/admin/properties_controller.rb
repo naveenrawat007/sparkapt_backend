@@ -58,6 +58,18 @@ module Api
         render json: { status: 200, lat_longs: result}
       end
 
+      def sort_floor_plans
+        if params[:id].present?
+          property = Property.find_by(id: params[:id])
+          if params[:order] == true
+            property_type_details = property.try(:type_details).where(property_type_name: params[:type]).order("#{params[:name]} asc")
+          else
+            property_type_details = property.try(:type_details).where(property_type_name: params[:type]).order("#{params[:name]} desc")
+          end
+          render json: { status: 200, property_type_details: ActiveModelSerializers::SerializableResource.new(property_type_details, each_serializer: PropertyTypeDetailSerializer)}
+        end
+      end
+
       def filter_property
         is_valid = validate_property
         if is_valid

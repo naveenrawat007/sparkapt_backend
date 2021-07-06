@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :leads
       get "/property_types" => "properties#get_property_types"
       get "/get_markets" => "properties#get_markets"
+      post "/sort_floor_plans" => "properties#sort_floor_plans"
 
       get "/latest_notification" => "notifications#get_latest_notification"
       post "/filter_property" => "properties#filter_property"
