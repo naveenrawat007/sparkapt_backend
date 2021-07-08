@@ -52,7 +52,7 @@ module Api
 
           begin
             UserWelcomeMailer.property_report(report&.report_code, params[:email],domain, @current_user&.email).deliver_now
-          rescue ExceptionName
+          rescue Exception => e
             render json: {message: "Error Occurred while sending mail !!", status: 401} and return
           end
 
@@ -65,7 +65,7 @@ module Api
               ClientReport.create(client_id: client.id, report_id: report.id)
               begin
                 UserWelcomeMailer.property_report(report&.report_code, client&.email, domain, @current_user&.email).deliver_now
-              rescue ExceptionName
+              rescue Exception => e
                 render json: {message: "Error Occurred while sending mail !!", status: 401} and return
               end
             end
@@ -132,13 +132,18 @@ module Api
     end
 
     def update_profile
-      if params[:user][:email].blank? == false
-        user = User.find_by(email: params[:user][:email])
+      data = JSON.parse(params[:user])
+      if data["email"].blank? == false
+        user = User.find_by(email: data["email"])
         if user.present?
           if user.id == @current_user.id
-            if user.update(user_update_params)
+            if user.update(first_name: data["first_name"], last_name: data["last_name"], email: data["email"], signature: data["signature"], phone_no: data["phone_no"])
               name = user.first_name + " " + user.last_name
               user.update_column('name', name)
+              if params[:logo].present?
+                user.logo = params[:logo]
+                user.save
+              end
               render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(user,root: false)}
             else
               render json: { message: "User not Update Sucessfully", status: 400} and return
@@ -148,9 +153,13 @@ module Api
           end
         else
           if @current_user.present?
-            if @current_user.update(user_update_params)
+            if @current_user.update(first_name: data["first_name"], last_name: data["last_name"], email: data["email"], signature: data["signature"], phone_no: data["phone_no"])
               name = @current_user.first_name + " " + @current_user.last_name
               @current_user.update_column('name', name)
+              if params[:logo].present?
+                user.logo = params[:logo]
+                user.save
+              end
               render json: { message: "User Update Sucessfully", status: 200,  user: UserSerializer.new(@current_user,root: false)}
             else
               render json: { message: "User not Update Sucessfully", status: 400} and return

@@ -12,6 +12,8 @@ class UserSerializer < ActiveModel::Serializer
     data[:approved] = object.approved ? object.approved : ""
     data[:city] = object&.city ? object&.city&.name : ""
     data[:phone_no] = object.phone_no ? object.phone_no : ""
+    data[:signature] = object.signature ? object.signature : ""
+    data[:logo_file_name] = object.logo_file_name ? object.logo_file_name : "Select Logo"
     data[:is_admin] = object.is_admin
     data[:is_va] = object.is_va
     data[:status] = object.status

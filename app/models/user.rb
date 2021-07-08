@@ -7,4 +7,8 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :clients, dependent: :destroy
   belongs_to :city, optional: true
+  has_many :guests, dependent: :destroy
+
+  has_attached_file :logo
+  validates_attachment_content_type :logo, :content_type => ["image/jpg", "image/jpeg", "image/png"]
 end

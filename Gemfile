@@ -42,6 +42,8 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "devise"
 gem 'jwt'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary', '~> 0.12.6.2'
 gem 'active_model_serializers'
 gem 'rack-cors'
 gem 'awesome_print'

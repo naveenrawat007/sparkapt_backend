@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     devise_for :users, controllers:{ sessions: 'api/users/sessions', registrations: 'api/users/registrations' }
     resources :clients
     resources :subscriptions
+    resources :guests
     namespace 'admin' do
       resources :notifications
       resources :properties
@@ -57,6 +58,8 @@ Rails.application.routes.draw do
     put "users/update_profile" => "users#update_profile"
     post "users/contact_us" => "users#contact_us"
     post 'search_client' => "clients#search_client"
+    get 'resend_pdf_mail/:id' => "guests#resend_pdf_mail"
+
 
     # property_report routes
 

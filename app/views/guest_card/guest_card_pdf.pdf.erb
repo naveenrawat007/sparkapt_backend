@@ -1,0 +1,11 @@
+<div class="">
+  <p>Hello,</p>
+  <p>This is <%= @guest&.first_name %></p>
+  <%= wicked_pdf_image_tag (Rails.application.secrets.host + @user.try(:logo).try(:url)), :style=>"display:inline-block; width:285px; max-width:100%; height:auto;" %>
+  <p>
+  	I hope you take a look into this.
+  </p>
+  <p>Thanks</p>
+  <p><%= @user&.signature %></p>
+
+</div>
