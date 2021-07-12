@@ -6,8 +6,8 @@ class FilterPropertyService
     @max_price = params[:new_filter][:max_price] == "" ? TypeDetail.maximum(:price) : params[:new_filter][:max_price].to_i
     @min_price = params[:new_filter][:min_price] == "" ? TypeDetail.minimum(:price) : params[:new_filter][:min_price].to_i
 
-    @available_from = params[:avail_from] ? params[:avail_from].to_date : TypeDetail.minimum(:move_in)
-    @available_to = params[:avail_to] ? params[:avail_to].to_date : TypeDetail.maximum(:move_in)
+    @available_from = params[:avail_from] ? params[:avail_from].to_date + 1.day : TypeDetail.minimum(:move_in)
+    @available_to = params[:avail_to] ? params[:avail_to].to_date + 1.day : TypeDetail.maximum(:move_in)
 
     @from_year = @params[:yearFilter][:from_year] == "" ? Property.minimum(:built_year) : @params[:yearFilter][:from_year].to_i
     @to_year = @params[:yearFilter][:to_year] == "" ? Property.maximum(:built_year) : @params[:yearFilter][:to_year].to_i

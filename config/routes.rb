@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     post "users/contact_us" => "users#contact_us"
     post 'search_client' => "clients#search_client"
     get 'resend_pdf_mail/:id' => "guests#resend_pdf_mail"
+    post 'download_guest_pdf' => "guests#download_guest_pdf"
 
 
     # property_report routes

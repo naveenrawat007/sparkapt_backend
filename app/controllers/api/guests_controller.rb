@@ -45,6 +45,21 @@ module Api
       end
     end
 
+    def download_guest_pdf
+      if params[:id].present?
+        @user = @current_user
+        @guest = Guest.find_by(id: params[:id])
+        if @guest.present?
+          file = WickedPdf.new.pdf_from_string(render_to_string(pdf: "Guest_Card_#{@guest.id}.pdf", template: 'guest_card/guest_card_pdf.pdf.erb', layout: 'guest_card_send.html.erb'))
+          # render json: { pdf: file, status: 200, message: "Guest Pdf"} and return
+        else
+          render json: { message: "Guest not found.", status: 400} and return
+        end
+      else
+        render json: { message: "Guest not found.", status: 400}
+      end
+    end
+
     private
 
     def guest_params
