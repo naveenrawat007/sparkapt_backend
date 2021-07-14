@@ -7,7 +7,7 @@ class GuestCardMailer < ApplicationMailer
     attachments["Guest_Card_#{@guest.id}.pdf"]  = WickedPdf.new.pdf_from_string(
                  render_to_string(pdf: "Guest_Card_#{@guest.id}.pdf", template: 'guest_card/guest_card_pdf.pdf.erb', layout: 'guest_card_send.html.erb')
                )
-    mail(to: "naveen@complitech.net" ,subject: "Guest Card… 😊")
+    mail(to: "data@sparkapt.com" ,subject: "Guest Card… 😊")
 	end
 
 

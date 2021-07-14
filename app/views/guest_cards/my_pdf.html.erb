@@ -53,11 +53,11 @@
 
 <div class="width-100 d-flex align-items-end mb-5">
   <div class="width-70">
-    <h3>Date of Inquiry: <span><%= @guest&.created_at.strftime("%b %d, %Y") %></span></h3>
+    <h3>Date of Inquiry: <span><%= guest&.created_at.strftime("%b %d, %Y") %></span></h3>
   </div>
 
   <div class="width-30">
-    <%= wicked_pdf_image_tag (Rails.application.secrets.host + @user.try(:logo).try(:url)), :style=>"display:inline-block; width:285px; max-width:100%; height:auto;" %>
+    <%= wicked_pdf_image_tag (Rails.application.secrets.host + user.try(:logo).try(:url)), :style=>"display:inline-block; width:285px; max-width:100%; height:auto;" %>
   </div>
 </div>
 
@@ -65,15 +65,15 @@
   <h2>Personal Information</h2>
 
   <div class="width-60">
-    <p>Name: <span><%= @guest&.first_name %> <%= @guest&.last_name %></span></p>
-    <p>Email: <span><%= @guest&.email %></span></p>
+    <p>Name: <span><%= guest&.first_name %> <%= guest&.last_name %></span></p>
+    <p>Email: <span><%= guest&.email %></span></p>
     <p>Reason For Move: </p>
   </div>
 
   <div class="width-40">
-    <p>Phone: <span><%= @guest&.phone %></span></p>
+    <p>Phone: <span><%= guest&.phone %></span></p>
     <p>Employer:</p>
-    <p>Budget: <span><%= @guest&.budget %></span></p>
+    <p>Budget: <span><%= guest&.budget %></span></p>
   </div>
 </div>
 
@@ -81,13 +81,13 @@
   <h2>Preferred Living Arrangements</h2>
 
   <p># of Bedrooms: &nbsp; &nbsp; &nbsp; # of Baths:</p>
-  <p>Intended Move Date: <span><%= @guest&.move_in.strftime("%b %d, %Y") %></span></p>
-  <p># of Pets: <span><%= @guest&.pet_number %></span> Type: <span><%= @guest&.pet_type %></span></p>
+  <p>Intended Move Date: <span><%= guest&.move_in.strftime("%b %d, %Y") %></span></p>
+  <p># of Pets: <span><%= guest&.pet_number %></span> Type: <span><%= guest&.pet_type %></span></p>
 </div>
 
 <div class="width-100 mb-5">
   <h2>Special Requirements</h2>
-  <p><%= @guest&.preferences %></p>
+  <p><%= guest&.preferences %></p>
 </div>
 
 <div class="width-100">

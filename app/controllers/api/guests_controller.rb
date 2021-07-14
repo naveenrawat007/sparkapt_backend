@@ -50,13 +50,18 @@ module Api
         @user = @current_user
         @guest = Guest.find_by(id: params[:id])
         if @guest.present?
-          file = WickedPdf.new.pdf_from_string(render_to_string(pdf: "Guest_Card_#{@guest.id}.pdf", template: 'guest_card/guest_card_pdf.pdf.erb', layout: 'guest_card_send.html.erb'))
-          # render json: { pdf: file, status: 200, message: "Guest Pdf"} and return
+          begin
+            pdf_html = ActionController::Base.new.render_to_string(template: 'guest_cards/my_pdf', layout: 'guest_card_send.html.erb', locals: { guest: @guest, user: @user})
+            pdf = WickedPdf.new.pdf_from_string(pdf_html)
+            send_data pdf, filename: 'file.pdf'
+          rescue Exception => e
+            render json: {message: "Something went wrong. Please try again!!"}, status: :not_found
+          end
         else
-          render json: { message: "Guest not found.", status: 400} and return
+          render json: { message: "Guest not found.", status: 400}, status: :not_found
         end
       else
-        render json: { message: "Guest not found.", status: 400}
+        render json: { message: "Guest not found.", status: 400}, status: :not_found
       end
     end
 
