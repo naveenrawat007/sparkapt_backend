@@ -10,20 +10,44 @@ module Api
     def create
       if params[:guest].present?
         guest = @current_user.guests.new(guest_params)
-        guest.communities = params[:community]
+        # guest.communities = params[:community]
         guest.move_in = params[:move_in]
         if guest.save
-          begin
-            GuestCardMailer.send_guest_card(guest&.id, @current_user&.id).deliver_now
-          rescue Exception => e
-            render json: {message: "Error Occurred while sending mail !!", status: 401} and return
+          if params[:selCommunities].kind_of?(Array) && params[:selCommunities].count > 0
+            communities_name = params[:selCommunities]&.map { |porp| porp&.values}&.flatten&.uniq
+            if communities_name.present?
+              properties = Property.where(name: communities_name)
+              if properties.present?
+                properties.each do |property|
+                  begin
+                    GuestCardMailer.send_guest_card(guest&.id, @current_user&.id, property&.email).deliver_now
+                  rescue Exception => e
+                    render json: {message: "Error Occurred while sending mail !!", status: 401} and return
+                  end
+                end
+              end
+            end
           end
           render json: { message: "Guest Card Send Successfully.", status: 200} and return
         else
           render json: { message: "Guest Card not saved. Please try again", status: 400} and return
         end
       else
-        render json: { message: "Please send valid parameters..", status: 400}
+        render json: { message: "Please send valid parameters..", status: 400} and return
+      end
+    end
+
+    def communities_name
+      communities_array = []
+      city = City.find_by(id: params[:id])
+      if city
+        city.properties.each do |community|
+          community_hash = { value: community&.name, label: community&.name}
+          communities_array.push(community_hash)
+        end
+        render json: {status: 200, communities: communities_array} and return
+      else
+        render json: {status: 400, message: "City not found"}
       end
     end
 

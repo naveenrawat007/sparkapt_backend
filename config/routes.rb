@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   namespace 'api' do
     devise_for :users, controllers:{ sessions: 'api/users/sessions', registrations: 'api/users/registrations' }
     resources :clients
@@ -60,6 +60,8 @@ Rails.application.routes.draw do
     post 'search_client' => "clients#search_client"
     get 'resend_pdf_mail/:id' => "guests#resend_pdf_mail"
     post 'download_guest_pdf' => "guests#download_guest_pdf"
+    post 'communities' => "guests#communities_name"
+
 
 
     # property_report routes
