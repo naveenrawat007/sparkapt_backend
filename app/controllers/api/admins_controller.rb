@@ -27,7 +27,7 @@ module Api
             user.update_attributes(approved: false, status: "Declined")
             message = "User Account request is Declined."
           end
-          render json: { message: message, status: 200, users: ActiveModelSerializers::SerializableResource.new(User.all.where(is_admin: false).order(created_at: :asc), each_serializer: UserSerializer)} and return
+          render json: { message: message, status: 200, users: ActiveModelSerializers::SerializableResource.new(User.all.where(is_admin: false, is_va: false).order(created_at: :asc), each_serializer: UserSerializer)} and return
         end
       else
         render json: { message: "User not Found", status: 400}
