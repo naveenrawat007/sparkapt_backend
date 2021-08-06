@@ -39,7 +39,7 @@ module Api
         city = City.find_by_id(params[:city])
         if city&.properties.present?
           city.properties.each do |property|
-            lat_long_hash = { id: property&.id, lat: property.lat, long: property.long}
+            lat_long_hash = { id: property&.id, lat: property.lat, long: property.long, icon: false}
             result.push(lat_long_hash)
           end
         end
@@ -73,12 +73,18 @@ module Api
       def filter_property
         is_valid = validate_property
         if is_valid
-          if params[:city_id].present?
-            properties = get_city_properties(params[:city_id])
+          if params[:property_ids].present?
+            properties = Property.where(id: params[:property_ids])
             result = FilterPropertyService.new(params, properties).call
             render json: {message: result.message, properties: result.properties, status: result.status}
           else
-            render json: { message: "City not found", status: 400} and return
+            if params[:city_id].present?
+              properties = get_city_properties(params[:city_id])
+              result = FilterPropertyService.new(params, properties).call
+              render json: {message: result.message, properties: result.properties, status: result.status}
+            else
+              render json: { message: "City not found", status: 400} and return
+            end
           end
         else
           render json: { message: "Please Subscribe us to get Apartment Details", status: 400}
