@@ -203,7 +203,7 @@ module Api
       def va_update_property
         property = Property.find_by(id: params[:id].to_i)
         if property.present?
-          property.update(google_rating: params[:rating])
+          property.update(property_params)
           property.type_details.destroy_all
 
           params[:details].each do |type_detail|
