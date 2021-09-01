@@ -39,21 +39,21 @@ module Api
 
         if params[:clientType] == "new"
           client = Client.find_by(phone: params[:email])
+          report = Report.create(message: @current_user&.signature, title: params[:report][:title] ,name: params[:first_name], agent_email: @current_user&.email, report_code: unique_code, property_ids: params[:property_ids], is_show: true)
           if params[:saveAsClient] == true
             if client.present?
               client.update(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], city_id: params[:city_id], status: "Active")
             else
               client = @current_user.clients.create(name: params[:first_name] + params[:last_name], first_name: params[:first_name], last_name: params[:last_name], phone: params[:email], city_id: params[:city_id], status: "Active", move_in_date: Date.today)
             end
+            ClientReport.create(client_id: client.id, report_id: report.id)
           end
-          report = Report.create(message: @current_user&.signature, title: params[:report][:title] ,name: params[:first_name], agent_email: @current_user&.email, report_code: unique_code, property_ids: params[:property_ids], is_show: true)
 
-          ClientReport.create(client_id: client.id, report_id: report.id)
           report_link = "#{domain}/properties-report?report_code=#{report&.report_code}"
           message = "Hello, Find a link to get your Property Details, #{report_link}, Thanks, SparkAPT Team"
           begin
             # UserWelcomeMailer.property_report(report&.report_code, params[:email],domain, @current_user&.email).deliver_now
-            TwilioSmsService.new(client&.phone, message).send_message
+            TwilioSmsService.new(params[:email], message).send_message
           rescue Exception => e
             render json: {message: "Error Occurred while sending text message !!", status: 401} and return
           end
