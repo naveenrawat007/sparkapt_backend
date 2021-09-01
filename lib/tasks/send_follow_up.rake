@@ -5,7 +5,8 @@ namespace :send_follow_up do
     clients.each do |client|
       if client.next_follow_up.present? && client.try(:user).phone_no.present?
         if Date.today == client.next_follow_up.to_date
-          TwilioSmsService.new(client.try(:user).phone_no, client&.first_name, client.try(:user).first_name).send_message
+          message = "Hi #{client.try(:user).first_name}, this is a reminder to take follow up of your client '#{client&.first_name}'. Thanks"
+          TwilioSmsService.new(client.try(:user).phone_no, message).send_message
         end
       end
     end
