@@ -169,7 +169,7 @@ module Api
         property_data = JSON.parse(params[:property])
         property = Property.find(params[:id].to_i)
         if property
-          property.assign_attributes(name: property_data["name"], email: property_data["email"], phone: property_data["phone"], specials: property_data["specials"], price: property_data["price"], submarket: property_data["submarket"], zip: property_data["zip"], built_year: property_data["built_year"], renovated: property_data["renovated"] ,escort: property_data["escort"], management_company: property_data["management_company"], web_link: property_data["web_link"], manager_name: property_data["manager_name"], google_rating: property_data["google_rating"], lat: property_data["lat"], long: property_data["long"], address: property_data["address"], google_map: property_data["google_map"], photo_gallery_link: property_data["photo_gallery_link"])
+          property.assign_attributes(name: property_data["name"], email: property_data["email"], phone: property_data["phone"], specials: property_data["specials"], price: property_data["price"], submarket: property_data["submarket"], zip: property_data["zip"], built_year: property_data["built_year"], renovated: property_data["renovated"] ,escort: property_data["escort"], send_escort: property_data["send_escort"], management_company: property_data["management_company"], web_link: property_data["web_link"], manager_name: property_data["manager_name"], google_rating: property_data["google_rating"], lat: property_data["lat"], long: property_data["long"], address: property_data["address"], google_map: property_data["google_map"], photo_gallery_link: property_data["photo_gallery_link"], floor_plan_link: property_data["floor_plan_link"], google_review_link: property_data["google_review_link"])
 
           if params[:image].present?
             property.image = params[:image]
@@ -262,7 +262,7 @@ module Api
       end
 
       def property_params
-        params.require(:property).permit(:name, :email, :phone, :specials, :price, :submarket, :zip, :built_year, :escort, :management_company, :web_link, :manger_name, :google_rating, :lat, :long, :address, :google_map, :photo_gallery_link)
+        params.require(:property).permit(:name, :email, :phone, :specials, :price, :submarket, :zip, :built_year, :escort, :management_company, :web_link, :manager_name, :google_rating, :lat, :long, :address, :google_map, :photo_gallery_link, :renovated, :send_escort, :google_review_link, :floor_plan_link)
       end
 
     end
