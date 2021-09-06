@@ -143,7 +143,7 @@ module Api
         user = User.find_by(email: data["email"])
         if user.present?
           if user.id == @current_user.id
-            if user.update(first_name: data["first_name"], last_name: data["last_name"], email: data["email"], signature: data["signature"], phone_no: data["phone_no"])
+            if user.update(first_name: data["first_name"], last_name: data["last_name"], email: data["email"], signature: data["signature"], phone_no: data["phone_no"], brokerage_name: data["brokerage_name"])
               name = user.first_name + " " + user.last_name
               user.update_column('name', name)
               if params[:logo].present?
@@ -159,7 +159,7 @@ module Api
           end
         else
           if @current_user.present?
-            if @current_user.update(first_name: data["first_name"], last_name: data["last_name"], email: data["email"], signature: data["signature"], phone_no: data["phone_no"])
+            if @current_user.update(first_name: data["first_name"], last_name: data["last_name"], email: data["email"], signature: data["signature"], phone_no: data["phone_no"], brokerage_name: data["brokerage_name"])
               name = @current_user.first_name + " " + @current_user.last_name
               @current_user.update_column('name', name)
               if params[:logo].present?

@@ -8,6 +8,7 @@ class UserSerializer < ActiveModel::Serializer
     data[:first_name] = object.first_name ? object.first_name : ""
     data[:last_name] = object.last_name ? object.last_name : ""
     data[:email] = object.email ? object.email : ""
+    data[:brokerage_name] = object.brokerage_name ? object.brokerage_name : ""
     data[:license_no] = object.license_no ? object.license_no : ""
     data[:approved] = object.approved ? object.approved : ""
     data[:city] = object&.city ? object&.city&.name : ""
