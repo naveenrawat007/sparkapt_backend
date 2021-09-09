@@ -34,7 +34,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:management_company] = object.management_company ? object.management_company : ""
     data[:manager_name] = object.manager_name ? object.manager_name : ""
     data[:google_rating] = object.google_rating ? object.google_rating : ""
-    data[:property_type_details] = ActiveModelSerializers::SerializableResource.new(object.type_details.order(price: :asc), each_serializer: PropertyTypeDetailSerializer)
+    data[:property_type_details] = ActiveModelSerializers::SerializableResource.new(object.type_details.order(move_in: :asc), each_serializer: PropertyTypeDetailSerializer)
     data
   end
 
